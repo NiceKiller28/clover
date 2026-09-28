@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clover — торрент-клиент с друзьями, звонками и серверами</title>
+<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с каналами, как в Discord. Без регистрации и рекламы.">
+<meta name="theme-color" content="#0D1713">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Clover — торрент-клиент с друзьями, звонками и серверами">
+<meta property="og:description" content="Бесплатный торрент-клиент для Windows: чат, звонки, показ экрана и серверы с каналами, как в Discord.">
+<meta property="og:url" content="https://nicekiller28.github.io/clover/">
+<meta property="og:image" content="https://nicekiller28.github.io/clover/clover-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 106'%3E%3Cg transform='rotate(-8)'%3E%3Cpath d='M0 0C2 20 6 36 17 48' stroke='%2386C26E' stroke-width='7.5' stroke-linecap='round' fill='none'/%3E%3Cg fill='%23A4ED86'%3E%3Cg id='l' transform='rotate(45)'%3E%3Ccircle cx='-9' cy='-27' r='14.5'/%3E%3Ccircle cx='9' cy='-27' r='14.5'/%3E%3Cpath d='M0-2-22.5-21.5H22.5Z'/%3E%3C/g%3E%3Cuse href='%23l' transform='rotate(90)'/%3E%3Cuse href='%23l' transform='rotate(180)'/%3E%3Cuse href='%23l' transform='rotate(270)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400..800&display=swap">
+<script>
+  // Before the first paint: JS-only effects, the chosen mascot colors and "Плавные анимации" (kept per visitor).
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('js');
+    try {
+      var calm = localStorage.getItem('clover-site-calm') === '1';
+      if (calm || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('calm');
+      window.__cloverMascot = localStorage.getItem('clover-site-mascot');
+    } catch (e) { }
+  })();
+</script>
+<style>
+  /* ---------- The app's palette (Mascots.cs, "Клевер") ---------- */
+  :root{
+    --bg:#0D1713; --sidebar:#0A120F; --surface:#15221B; --surface-alt:#1C3024; --hover:#182920; --border:#22382B;
+    --text:#ECF3EC; --muted:#91A497; --faint:#5F7366; --accent:#A4ED86; --accent-deep:#72C064; --accent-dark:#182A16;
+    --seed:#69C7A6; --info:#8EC5E8; --warning:#E8C47B; --danger:#F09A94;
+    --video-hue:0deg;
+    --accent-hi: color-mix(in srgb, var(--accent) 88%, white);
+    --accent-lo: color-mix(in srgb, var(--accent) 88%, black);
+    --accent-stem: color-mix(in srgb, var(--accent) 82%, black);
+    --ease: cubic-bezier(.22,1,.36,1);
+    --side: 250px;
+    --radius: 16px;
+    color-scheme: dark;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:24px}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Noto Sans","Segoe UI",system-ui,-apple-system,sans-serif; font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    transition:background-color .5s ease, color .5s ease;
+  }
+  a{color:inherit}
+  /* width/height attributes only reserve space; the picture keeps its own proportions. */
+  img{max-width:100%; height:auto; display:block}
+  html, body{overflow-x:clip}
+  .sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+  a:focus-visible, button:focus-visible, summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:10px}
+  .i{width:18px; height:18px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+
+  /* ---------- Clover logo (Theme.DrawClover) ---------- */
+  .logo{display:block; overflow:visible}
+  /* Inside the <symbol>: rotates around the clover's center (the symbol's 0,0), like Mascots.Draw. */
+  .sway{transform-origin:0 0; animation:sway 4.2s ease-in-out infinite}
+  @keyframes sway{0%,100%{transform:rotate(-8deg) scale(1)} 25%{transform:rotate(-1deg) scale(1.03)} 50%{transform:rotate(-8deg) scale(1)} 75%{transform:rotate(-15deg) scale(.97)}}
+
+  /* ---------- Buttons (GreenButton) ---------- */
+  .btn{
+    position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    height:44px; padding:0 20px; border-radius:12px; border:1px solid var(--border);
+    background:var(--surface); color:var(--text); font:inherit; font-size:14.5px; font-weight:600; white-space:nowrap;
+    text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+    transition:background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease, box-shadow .25s ease;
+  }
+  .btn:hover{background:var(--hover); border-color:color-mix(in srgb, var(--border) 60%, var(--accent))}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:var(--accent); border-color:color-mix(in srgb, var(--accent) 88%, white); color:var(--accent-dark)}
+  .btn.primary:hover{background:color-mix(in srgb, var(--accent) 82%, white); box-shadow:0 8px 28px -8px color-mix(in srgb, var(--accent) 70%, transparent)}
+  .btn.big{height:52px; padding:0 26px; font-size:16px; border-radius:14px}
+  .btn.primary::after{
+    content:""; position:absolute; top:0; bottom:0; left:-60%; width:45%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform:skewX(-18deg); opacity:0;
+  }
+  .btn.primary:hover::after{animation:sheen .75s var(--ease)}
+  @keyframes sheen{from{left:-60%; opacity:1} to{left:120%; opacity:1}}
+  .ripple{position:absolute; border-radius:50%; pointer-events:none; background:currentColor; opacity:.25; transform:scale(0); animation:ripple .55s ease-out forwards}
+  @keyframes ripple{to{transform:scale(1); opacity:0}}
+
+  /* ---------- Sidebar (the app's left panel) ---------- */
+  .sidebar{
+    position:fixed; z-index:30; top:0; bottom:0; left:0; width:var(--side);
+    display:flex; flex-direction:column; padding:22px 14px 16px;
+    background:var(--sidebar); border-right:1px solid var(--border);
+    transition:background-color .5s ease, border-color .5s ease, transform .35s var(--ease);
+  }
+  .brand{display:flex; align-items:center; gap:12px; padding:0 8px 22px; text-decoration:none}
+  .brand-tile{
+    width:44px; height:44px; flex:none; display:grid; place-items:center; border-radius:13px;
+    background:linear-gradient(160deg, var(--surface-alt), var(--bg)); border:1px solid color-mix(in srgb, var(--border) 70%, var(--accent));
+  }
+  .brand-tile .logo{width:30px; height:32px}
+  .brand-text b{display:block; font-size:21px; line-height:1.1; font-weight:750; letter-spacing:-.01em}
+  .brand-text small{display:block; font-size:12.5px; color:var(--muted)}
+  .nav-label{padding:6px 12px 8px; font-size:11px; font-weight:750; letter-spacing:.06em; color:var(--faint)}
+  .nav{position:relative; display:flex; flex-direction:column; gap:4px; margin-bottom:18px}
+  .nav a{
+    position:relative; z-index:1; display:flex; align-items:center; gap:12px; height:42px; padding:0 12px; border-radius:11px;
+    color:var(--muted); text-decoration:none; font-size:14.5px; transition:color .2s ease, background-color .2s ease;
+  }
+  .nav a:hover{color:var(--text); background:color-mix(in srgb, var(--hover) 70%, transparent)}
+  .nav a[aria-current="true"]{color:var(--text)}
+  .nav a[aria-current="true"]:hover{background:transparent}
+  .nav .badge{
+    margin-left:auto; min-width:26px; height:22px; padding:0 8px; border-radius:11px; display:grid; place-items:center;
+    background:var(--surface-alt); color:var(--muted); font-size:11.5px; font-weight:700;
+  }
+  .nav-highlight{
+    position:absolute; left:0; right:0; top:0; height:42px; border-radius:11px; background:var(--surface-alt);
+    transition:transform .45s var(--ease), background-color .5s ease; pointer-events:none;
+  }
+  .nav-highlight::before{content:""; position:absolute; left:0; top:10px; bottom:10px; width:3px; border-radius:2px; background:var(--accent)}
+  .side-fill{flex:1}
+  .side-card{
+    padding:14px 15px; margin-bottom:12px; border-radius:14px; background:var(--surface); border:1px solid var(--border);
+    font-size:12.5px; color:var(--muted); line-height:1.45;
+  }
+  .side-card b{display:flex; align-items:center; gap:8px; margin-bottom:6px; color:var(--text); font-size:13.5px}
+  .side-card b .i{color:var(--accent); width:16px; height:16px}
+  .side-download{width:100%}
+  .side-meta{margin:8px 4px 0; text-align:center; font-size:12px; color:var(--faint)}
+  .toggle{display:flex; align-items:center; gap:12px; margin:16px 4px 6px; background:none; border:0; padding:0; color:var(--muted); font:inherit; font-size:13.5px; cursor:pointer}
+  .toggle .track{position:relative; width:38px; height:22px; border-radius:11px; background:var(--accent); transition:background-color .25s ease}
+  .toggle .track::after{content:""; position:absolute; top:3px; left:19px; width:16px; height:16px; border-radius:50%; background:var(--accent-dark); transition:left .25s var(--ease)}
+  .toggle[aria-pressed="false"] .track{background:var(--surface-alt)}
+  .toggle[aria-pressed="false"] .track::after{left:3px; background:var(--muted)}
+  .side-foot{margin:8px 6px 0; font-size:11.5px; color:var(--faint)}
+
+  /* ---------- Mobile top bar ---------- */
+  .topbar{
+    display:none; position:fixed; z-index:25; top:0; left:0; right:0; height:62px; padding:0 14px;
+    align-items:center; gap:10px;
+    background:color-mix(in srgb, var(--sidebar) 78%, transparent); border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+  .topbar .brand{padding:0; margin-right:auto}
+  .topbar .brand-tile{width:38px; height:38px; border-radius:11px}
+  .topbar .brand-tile .logo{width:26px; height:28px}
+  .topbar .brand-text b{font-size:18px}
+  .topbar .btn{height:40px; padding:0 14px; font-size:14px}
+  .menu-btn{width:40px; padding:0}
+  .backdrop{display:none; position:fixed; inset:0; z-index:28; background:rgba(0,0,0,.55); opacity:0; transition:opacity .3s ease}
+
+  /* ---------- Main ---------- */
+  .main{margin-left:var(--side); min-width:0}
+
+  /* Hero: the intro loop with the text under the ring. */
+  .hero{position:relative; height:max(100vh, 760px); height:max(100svh, 760px); overflow:hidden; container-type:size; isolation:isolate}
+  .hero video, .hero .poster{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; z-index:-2;
+    filter:hue-rotate(var(--video-hue)); transition:filter .8s ease}
+  .hero::after{content:""; position:absolute; left:0; right:0; bottom:0; height:26%; z-index:-1; pointer-events:none;
+    background:linear-gradient(to bottom, transparent, var(--bg)); transition:background .5s ease}
+  .hero-content{
+    position:absolute; left:0; right:0; top:44%;
+    /* Just below the ring: the video covers the hero, ring center at 30%, radius 13% of the shown video height. */
+    top:calc(50cqh - .058 * max(100cqh, 56.25cqw) + 24px);
+    display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 20px;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:10px; height:34px; padding:0 14px 0 5px; margin-bottom:18px; border-radius:17px;
+    background:color-mix(in srgb, var(--surface) 70%, transparent); border:1px solid var(--border); color:var(--text);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    text-decoration:none; font-size:13.5px; white-space:nowrap; max-width:100%; transition:background-color .2s ease, border-color .2s ease;
+  }
+  .pill:hover{background:var(--hover); border-color:color-mix(in srgb, var(--border) 50%, var(--accent))}
+  .chip{display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 10px; border-radius:12px; background:var(--accent); color:var(--accent-dark); font-weight:750; font-size:12px}
+  .chip .i{width:13px; height:13px; stroke-width:2.2}
+  .pill > .i{width:14px; height:14px; color:var(--muted)}
+  .hero h1{
+    margin:0; font-size:clamp(56px, 7.4vw, 100px); line-height:1; font-weight:800; letter-spacing:.02em;
+    display:flex; justify-content:center;
+  }
+  .hero h1 span{display:inline-block}
+  .caption{margin:12px 0 0; font-size:14px; letter-spacing:.55em; margin-right:-.55em; color:var(--muted); text-transform:lowercase}
+  .tagline{max-width:620px; margin:20px 0 0; font-size:clamp(16px, 1.45vw, 19px); line-height:1.5; color:color-mix(in srgb, var(--text) 82%, var(--muted))}
+  .cta{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:28px}
+  .meta{margin-top:16px; font-size:13px; color:var(--faint)}
+  .meta b{color:var(--muted); font-weight:600}
+  .scroll-cue{position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:2px;
+    color:var(--faint); font-size:12px; text-decoration:none}
+  .scroll-cue .i{animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)}}
+
+  /* Sections: the app's page header (title + muted subtitle) and rounded panels. */
+  .section{padding:90px clamp(20px, 5vw, 64px); max-width:1240px; margin:0 auto}
+  .section-head{margin-bottom:34px}
+  .section-head h2{margin:0; font-size:clamp(28px, 3.2vw, 38px); line-height:1.15; font-weight:780; letter-spacing:-.015em}
+  .section-head p{margin:10px 0 0; max-width:640px; color:var(--muted); font-size:16px}
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); transition:background-color .5s ease, border-color .3s ease, transform .3s var(--ease)}
+
+  .shot{position:relative; width:100%; height:auto; aspect-ratio:auto; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:var(--sidebar);
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.02)}
+  .shot-wrap{position:relative}
+  .shot-wrap::before{content:""; position:absolute; inset:8% 6% -4%; z-index:-1; border-radius:40px; filter:blur(60px);
+    background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 22%, transparent), transparent)}
+
+  /* Metric cards, like the speed cards on the downloads page. */
+  .metrics{display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; margin-top:26px}
+  .metric{position:relative; padding:14px 16px 12px; border-radius:14px; overflow:hidden; min-height:104px}
+  .metric:hover{border-color:color-mix(in srgb, var(--border) 45%, var(--accent)); background:color-mix(in srgb, var(--surface) 70%, var(--hover))}
+  .metric-cap{display:flex; align-items:center; gap:9px; font-size:12.5px; font-weight:700; color:var(--muted)}
+  .tile{width:26px; height:26px; flex:none; border-radius:8px; display:grid; place-items:center; color:var(--accent); background:color-mix(in srgb, var(--accent) 16%, transparent)}
+  .tile .i{width:15px; height:15px}
+  .metric-value{margin-top:8px; font-size:26px; line-height:1.2; font-weight:780}
+  .metric-hint{margin-top:4px; font-size:12px; color:var(--muted)}
+  .spark{position:absolute; right:14px; top:48px; width:84px; height:26px; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right, transparent, #000 25%); mask-image:linear-gradient(to right, transparent, #000 25%)}
+  .spark svg{width:168px; height:26px; animation:spark 6s linear infinite}
+  .spark path.area{fill:color-mix(in srgb, var(--accent) 18%, transparent); stroke:none}
+  .spark path.line{fill:none; stroke:var(--accent); stroke-width:1.6; stroke-linejoin:round}
+  @keyframes spark{to{transform:translateX(-84px)}}
+
+  /* Features grid. */
+  .features{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:14px}
+  .feature{padding:22px 22px 20px}
+  .feature:hover{transform:translateY(-3px); border-color:color-mix(in srgb, var(--border) 45%, var(--accent))}
+  .feature .tile{width:42px; height:42px; border-radius:12px; margin-bottom:16px}
+  .feature .tile .i{width:21px; height:21px}
+  .feature h3{margin:0 0 6px; font-size:16.5px; font-weight:720}
+  .feature p{margin:0; color:var(--muted); font-size:14px}
+
+  /* Split sections. */
+  .split{display:grid; grid-template-columns:minmax(0, .9fr) minmax(0, 1.25fr); gap:48px; align-items:center}
+  .split h2{margin:0; font-size:clamp(28px, 3vw, 36px); line-height:1.15; font-weight:780; letter-spacing:-.015em}
+  .split .lead{margin:14px 0 22px; color:var(--muted); font-size:16px}
+  .checks{list-style:none; margin:0 0 28px; padding:0; display:grid; gap:12px}
+  .checks li{display:flex; gap:12px; align-items:flex-start}
+  .checks .dot{width:24px; height:24px; flex:none; border-radius:50%; display:grid; place-items:center; margin-top:1px;
+    background:color-mix(in srgb, var(--accent) 18%, transparent); color:var(--accent)}
+  .checks .dot .i{width:14px; height:14px; stroke-width:2.4}
+  .checks b{font-weight:650}
+  .checks span{color:var(--muted)}
+
+  /* Mascots: pick one and the site takes its colors, as the app does. */
+  .mascots{display:flex; flex-wrap:wrap; gap:10px; margin:0 0 26px}
+  .mascot{
+    display:inline-flex; align-items:center; gap:10px; height:42px; padding:0 16px 0 12px; border-radius:21px;
+    background:var(--surface); border:1px solid var(--border); color:var(--text); font:inherit; font-size:14px; cursor:pointer;
+    transition:border-color .2s ease, background-color .2s ease, transform .2s ease;
+  }
+  .mascot:hover{background:var(--hover); transform:translateY(-1px)}
+  .mascot[aria-pressed="true"]{border-color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, var(--surface))}
+  .dots{display:inline-flex}
+  .dots i{width:12px; height:12px; border-radius:50%; border:2px solid var(--surface)}
+  .dots i + i{margin-left:-4px}
+
+  /* Install steps. */
+  .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px}
+  .step{padding:24px 22px}
+  .num{width:36px; height:36px; border-radius:50%; display:grid; place-items:center; margin-bottom:16px;
+    background:var(--accent); color:var(--accent-dark); font-weight:800}
+  .step h3{margin:0 0 6px; font-size:17px; font-weight:720}
+  .step p{margin:0; color:var(--muted); font-size:14px}
+  .step code{font-family:"Cascadia Mono",Consolas,monospace; font-size:13px; color:var(--accent); background:var(--surface-alt); padding:1px 6px; border-radius:6px}
+  .get{
+    display:flex; align-items:center; gap:22px; margin-top:14px; padding:22px 24px;
+    background:linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, var(--surface)), var(--surface) 60%);
+  }
+  .get .brand-tile{width:58px; height:58px; border-radius:16px}
+  .get .brand-tile .logo{width:40px; height:42px}
+  .get-text{margin-right:auto}
+  .get-text b{display:block; font-size:18px}
+  .get-text span{color:var(--muted); font-size:14px}
+  .reqs{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+  .req{display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 10px; border-radius:13px; background:var(--surface-alt); color:var(--muted); font-size:12.5px}
+  .req .i{width:13px; height:13px; color:var(--accent)}
+
+  /* FAQ. */
+  .faq{display:grid; gap:10px; max-width:860px}
+  .faq details{padding:0 20px}
+  .faq details[open]{border-color:color-mix(in srgb, var(--border) 50%, var(--accent))}
+  .faq summary{list-style:none; display:flex; align-items:center; gap:14px; min-height:60px; cursor:pointer; font-weight:650; font-size:15.5px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary .i{margin-left:auto; color:var(--muted); transition:transform .3s var(--ease)}
+  .faq details[open] summary .i{transform:rotate(180deg)}
+  .faq details p{margin:0 0 18px; color:var(--muted); font-size:14.5px}
+
+  footer{border-top:1px solid var(--border); padding:30px clamp(20px, 5vw, 64px) 40px; color:var(--faint); font-size:13px}
+  footer .row{max-width:1240px; margin:0 auto; display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center}
+  footer .brand{padding:0}
+  footer .brand-tile{width:34px; height:34px; border-radius:10px}
+  footer .brand-tile .logo{width:23px; height:25px}
+  footer .brand-text b{font-size:16px}
+
+  /* Entrance: the title spells itself out like the intro ("КЛЕВЕР" in the app). */
+  .js .hero-content > *{opacity:0; animation:rise .8s var(--ease) both}
+  .js .hero-content > .pill{animation-delay:.15s}
+  .js .hero-content > h1{opacity:1; animation:spread 1.1s var(--ease) .35s both}
+  .js .hero h1 span{opacity:0; animation:letter .5s var(--ease) both; animation-delay:calc(.4s + var(--i) * .07s)}
+  .js .hero-content > .caption{animation-delay:.95s}
+  .js .hero-content > .tagline{animation-delay:1.05s}
+  .js .hero-content > .cta{animation-delay:1.15s}
+  .js .hero-content > .meta{animation-delay:1.25s}
+  @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+  @keyframes letter{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+  @keyframes spread{from{letter-spacing:.32em; margin-right:-.3em} to{letter-spacing:.02em; margin-right:0}}
+  .js .reveal{opacity:0; transform:translateY(22px); transition:opacity .8s var(--ease), transform .8s var(--ease)}
+  .js .reveal.in{opacity:1; transform:none}
+  .js .reveal.d1{transition-delay:.08s} .js .reveal.d2{transition-delay:.16s} .js .reveal.d3{transition-delay:.24s}
+
+  /* "Плавные анимации" off (or reduced motion): everything still, the video paused on its poster. */
+  .calm *, .calm *::before, .calm *::after{animation:none!important; transition:none!important}
+  .calm .js .reveal, .calm.js .reveal{opacity:1; transform:none}
+  .calm.js .hero-content > *, .calm.js .hero h1 span{opacity:1}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1100px){
+    .metrics{grid-template-columns:repeat(2, 1fr)}
+    .split{grid-template-columns:1fr; gap:32px}
+    .steps{grid-template-columns:1fr}
+  }
+  @media (max-width:1000px){
+    .sidebar{transform:translateX(-100%); box-shadow:none; width:min(300px, 86vw)}
+    .nav-open .sidebar{transform:none; box-shadow:30px 0 60px rgba(0,0,0,.45)}
+    .nav-open .backdrop{display:block; opacity:1}
+    .topbar{display:flex}
+    .main{margin-left:0}
+    .section{padding-top:70px; padding-bottom:70px}
+    html{scroll-padding-top:74px}
+  }
+  @media (max-width:560px){
+    .metrics{grid-template-columns:1fr}
+    .get{flex-direction:column; align-items:flex-start}
+    .get .btn{width:100%}
+    .cta .btn{width:100%}
+    .cta{width:100%; max-width:360px}
+    .topbar .dl-text{display:none}
+    .caption{font-size:12px; letter-spacing:.42em; margin-right:-.42em}
+    .scroll-cue{display:none}
+    /* Narrow screens wrap the text into more lines: a taller hero keeps it all under the ring. */
+    .hero{height:max(100vh, 880px); height:max(100svh, 880px)}
+  }
+  @media (max-width:420px){ .pill .wide{display:none} }
+  @media (max-height:820px){ .scroll-cue{display:none} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="clover-grad" gradientUnits="userSpaceOnUse" x1="-34.15" y1="-59.15" x2="34.15" y2="59.15">
+      <stop offset="0" style="stop-color:var(--accent-hi)"/>
+      <stop offset="1" style="stop-color:var(--accent-lo)"/>
+    </linearGradient>
+    <g id="clover-leaf">
+      <circle cx="-8.99" cy="-27" r="14.5"/><circle cx="8.99" cy="-27" r="14.5"/><path d="M0-2-22.475-21.49H22.475Z"/>
+    </g>
+    <!-- Theme.DrawClover: four heart-shaped leaves, a stem and a dark core -->
+    <symbol id="clover" viewBox="-50 -52 100 108">
+      <g class="sway">
+        <path d="M0 0C2 20 6 36 17 48" fill="none" stroke-width="7.5" stroke-linecap="round" style="stroke:var(--accent-stem)"/>
+        <g fill="url(#clover-grad)">
+          <use href="#clover-leaf" transform="rotate(45)"/><use href="#clover-leaf" transform="rotate(135)"/>
+          <use href="#clover-leaf" transform="rotate(225)"/><use href="#clover-leaf" transform="rotate(315)"/>
+        </g>
+        <circle r="4.5" style="fill:var(--bg)"/>
+      </g>
+    </symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 9v11"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/></symbol>
+    <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h15M4 15h15M10 3 8 21M16 3l-2 18"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-.9-.6-1.3-.6-2.1 0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4C21 6.8 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="7.8" r="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.6"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-magnet" viewBox="0 0 24 24"><path d="M6 3v8a6 6 0 0 0 12 0V3h-4v8a2 2 0 0 1-4 0V3zM6 7h4M14 7h4"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.6"/><path d="M16.3 14.1A5 5 0 0 1 21.5 19"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 4 4v2.2a2.8 2.8 0 0 1-5.1 1.6L14.6 14H9.4l-1.3 1.8A2.8 2.8 0 0 1 3 14.2V12a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3"/><circle cx="15.5" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="17.5" cy="13" r=".9" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15zM10 21a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2.2"/><path d="M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-exchange" viewBox="0 0 24 24"><path d="M7 4v15M3 15l4 4 4-4M17 20V5M13 9l4-4 4 4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-windows" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Clover — наверх">
+    <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+    <span class="brand-text"><b>Clover</b></span>
+  </a>
+  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/download/v2.0/Clover-2.0.zip"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover 2.0</span></a>
+  <button class="btn menu-btn" id="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+</header>
+<div class="backdrop" id="backdrop"></div>
+
+<aside class="sidebar" id="sidebar" aria-label="Разделы сайта">
+  <a class="brand" href="#top" aria-label="Clover — наверх">
+    <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+    <span class="brand-text"><b>Clover</b><small>торрент-клиент</small></span>
+  </a>
+  <div class="nav-label">О ПРОГРАММЕ</div>
+  <nav class="nav" id="nav">
+    <span class="nav-highlight" aria-hidden="true"></span>
+    <a href="#top" data-section="top"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Главная</a>
+    <a href="#app" data-section="app"><svg class="i" aria-hidden="true"><use href="#i-window"/></svg>В одном окне</a>
+    <a href="#features" data-section="features"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>Возможности<span class="badge">8</span></a>
+    <a href="#servers" data-section="servers"><svg class="i" aria-hidden="true"><use href="#i-hash"/></svg>Серверы<span class="badge">2.0</span></a>
+    <a href="#mascots" data-section="mascots"><svg class="i" aria-hidden="true"><use href="#i-palette"/></svg>Талисманы<span class="badge">8</span></a>
+    <a href="#install" data-section="install"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Установка</a>
+    <a href="#faq" data-section="faq"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Вопросы</a>
+  </nav>
+  <div class="side-fill"></div>
+  <div class="side-card">
+    <b><svg class="i" aria-hidden="true"><use href="#i-exchange"/></svg>Бесплатно навсегда</b>
+    Без регистрации и рекламы. С друзьями — через общую сеть Radmin VPN.
+  </div>
+  <a class="btn primary side-download" href="https://github.com/NiceKiller28/clover/releases/download/v2.0/Clover-2.0.zip"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
+  <div class="side-meta">2.0 · Windows 10/11 · 69 МБ</div>
+  <button class="toggle" id="calm-toggle" type="button" aria-pressed="true"><span class="track" aria-hidden="true"></span>Плавные анимации</button>
+  <div class="side-foot">Clover 2.0 · BitTorrent</div>
+</aside>
+
+<main class="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <img class="poster" src="clover-poster.jpg" alt="" aria-hidden="true">
+    <video id="bg-video" autoplay muted loop playsinline preload="auto" poster="clover-poster.jpg" aria-hidden="true">
+      <source src="clover-loop.webm" type="video/webm">
+      <source src="clover-loop.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <a class="pill" href="#servers">
+        <span class="chip"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg>2.0</span>
+        <span>Серверы<span class="wide"> и голосовые каналы</span></span>
+        <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </a>
+      <h1 id="hero-title" aria-label="Clover"><span style="--i:0" aria-hidden="true">C</span><span style="--i:1" aria-hidden="true">l</span><span style="--i:2" aria-hidden="true">o</span><span style="--i:3" aria-hidden="true">v</span><span style="--i:4" aria-hidden="true">e</span><span style="--i:5" aria-hidden="true">r</span></h1>
+      <p class="caption">торрент-клиент</p>
+      <p class="tagline">Качайте торренты, переписывайтесь и созванивайтесь с друзьями — в одном окне, без регистрации и рекламы.</p>
+      <div class="cta">
+        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.0/Clover-2.0.zip"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать для Windows</a>
+        <a class="btn big" href="#features">Возможности<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="meta"><b>Версия 2.0</b> · Windows 10/11, 64 бит · ZIP, 69 МБ · бесплатно</div>
+    </div>
+    <a class="scroll-cue" href="#app">Листайте вниз<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+  </section>
+
+  <section class="section" id="app">
+    <div class="section-head reveal">
+      <h2>Всё в одном окне</h2>
+      <p>Загрузки, друзья, звонки и серверы — там же, где вы качаете торренты. Тёмная тема, плавные анимации и талисман, как на этой странице.</p>
+    </div>
+    <div class="shot-wrap reveal d1">
+      <img class="shot" src="app-servers.png" width="1360" height="880" loading="lazy" alt="Окно Clover: сервер «Клуб любителей раздач» с текстовым каналом #общий, голосовым каналом и списком участников">
+    </div>
+    <div class="metrics">
+      <div class="panel metric reveal">
+        <div class="metric-cap"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg></span>Цена</div>
+        <div class="metric-value">0 ₽</div><div class="metric-hint">Без рекламы и подписок</div>
+        <div class="spark" aria-hidden="true"><svg viewBox="0 0 168 26"><path class="area" d="M0 20 14 17 28 19 42 12 56 14 70 8 84 20 98 17 112 19 126 12 140 14 154 8 168 20V26H0Z"/><path class="line" d="M0 20 14 17 28 19 42 12 56 14 70 8 84 20 98 17 112 19 126 12 140 14 154 8 168 20"/></svg></div>
+      </div>
+      <div class="panel metric reveal d1">
+        <div class="metric-cap"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg></span>Шифрование</div>
+        <div class="metric-value">AES-256</div><div class="metric-hint">Чат, звонки, файлы и экран</div>
+        <div class="spark" aria-hidden="true"><svg viewBox="0 0 168 26"><path class="area" d="M0 14 14 16 28 10 42 13 56 7 70 11 84 14 98 16 112 10 126 13 140 7 154 11 168 14V26H0Z"/><path class="line" d="M0 14 14 16 28 10 42 13 56 7 70 11 84 14 98 16 112 10 126 13 140 7 154 11 168 14"/></svg></div>
+      </div>
+      <div class="panel metric reveal d2">
+        <div class="metric-cap"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span>Звук звонков</div>
+        <div class="metric-value">48 кГц</div><div class="metric-hint">Кодек Opus, как в Discord</div>
+        <div class="spark" aria-hidden="true"><svg viewBox="0 0 168 26"><path class="area" d="M0 18 14 9 28 15 42 6 56 17 70 11 84 18 98 9 112 15 126 6 140 17 154 11 168 18V26H0Z"/><path class="line" d="M0 18 14 9 28 15 42 6 56 17 70 11 84 18 98 9 112 15 126 6 140 17 154 11 168 18"/></svg></div>
+      </div>
+      <div class="panel metric reveal d3">
+        <div class="metric-cap"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span>Регистрация</div>
+        <div class="metric-value">Не нужна</div><div class="metric-hint">Друг добавляется по коду</div>
+        <div class="spark" aria-hidden="true"><svg viewBox="0 0 168 26"><path class="area" d="M0 12 14 14 28 9 42 16 56 12 70 15 84 12 98 14 112 9 126 16 140 12 154 15 168 12V26H0Z"/><path class="line" d="M0 12 14 14 28 9 42 16 56 12 70 15 84 12 98 14 112 9 126 16 140 12 154 15 168 12"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <h2>Возможности</h2>
+      <p>Торрент-клиент, мессенджер и голосовой чат — без серверов посредников: компьютеры друзей соединяются друг с другом через общую сеть Radmin VPN.</p>
+    </div>
+    <div class="features">
+      <article class="panel feature reveal"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-magnet"/></svg></span><h3>Торренты</h3><p>.torrent и magnet-ссылки, DHT и трекеры. Скачанные части сразу раздаются — пиры охотнее отдают данные вам.</p></article>
+      <article class="panel feature reveal d1"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span><h3>Друзья по коду</h3><p>Зайдите с другом в одну сеть Radmin VPN и отправьте ему свой код — и можно переписываться. «Печатает…», отметки о доставке, история на диске.</p></article>
+      <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-hash"/></svg></span><h3>Серверы и каналы</h3><p>Текстовые и голосовые каналы, как в Discord. Участникам не обязательно дружить между собой.</p></article>
+      <article class="panel feature reveal d3"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><h3>Звонки и экран</h3><p>Звук Opus 48 кГц, шумоподавление, рация (push-to-talk) и показ экрана до 1920×1080.</p></article>
+      <article class="panel feature reveal"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg></span><h3>Файлы любого размера</h3><p>Перетащите файл в чат. После обрыва передача продолжится с того же места, а SHA-256 проверит, что всё дошло целым.</p></article>
+      <article class="panel feature reveal d1"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-game"/></svg></span><h3>Статусы и игры</h3><p>«В сети», «Не на месте», «Не беспокоить», «Невидимка». Во что вы играете, Clover видит сам — друзья видят «Играет в…».</p></article>
+      <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span><h3>Шифрование</h3><p>ECDH P-256 и AES-256-GCM для всего, что идёт между компьютерами. Сообщения на серверах подписаны ключом автора.</p></article>
+      <article class="panel feature reveal d3"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><h3>Работа в фоне</h3><p>Крестик сворачивает в трей, как в Discord: загрузки идут, звонок сам откроет окно, рингтон — на ваш выбор.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="servers">
+    <div class="split">
+      <div class="reveal">
+        <h2>Серверы и голосовые каналы</h2>
+        <p class="lead">Новое в Clover 2.0. Создайте сервер, позовите друзей — и общайтесь, как в Discord, только без чужих серверов посередине.</p>
+        <ul class="checks">
+          <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Текстовые каналы</b> <span>— сообщения с именем и фото автора; кто был не в сети, получит пропущенное.</span></div></li>
+          <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Голос одним щелчком</b> <span>— зашли в канал, и все вас слышат; у говорящего зелёная рамка.</span></div></li>
+          <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Шумодав и рация</b> <span>— те же настройки микрофона, что в звонках.</span></div></li>
+          <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Связь через участников</b> <span>— если двое не соединяются напрямую, голос передаст третий.</span></div></li>
+          <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Владелец управляет</b> <span>— каналы, приглашения и участники в меню сервера.</span></div></li>
+        </ul>
+        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.0/Clover-2.0.zip"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать 2.0</a>
+      </div>
+      <div class="shot-wrap reveal d1">
+        <img class="shot" src="app-voice.png" width="1360" height="880" loading="lazy" alt="Голосовой канал в Clover: плитки участников, у говорящих зелёная рамка, панель «Голос подключён»">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mascots">
+    <div class="section-head reveal">
+      <h2>Талисманы и цвета</h2>
+      <p>В приложении восемь талисманов со своими цветами и анимацией. Попробуйте прямо здесь — сайт перекрасится так же, как Clover.</p>
+    </div>
+    <div class="mascots reveal d1" id="mascot-list" role="group" aria-label="Талисман"></div>
+    <div class="shot-wrap reveal d2">
+      <img class="shot" src="app-mascots.png" width="1028" height="703" loading="lazy" alt="Окно «Оформление» в Clover: восемь талисманов — клевер, ракета, машина, череп, костёр, кот, призрак и планета">
+    </div>
+  </section>
+
+  <section class="section" id="install">
+    <div class="section-head reveal">
+      <h2>Установка за минуту</h2>
+      <p>Устанавливать ничего не нужно: .NET уже внутри архива.</p>
+    </div>
+    <div class="steps">
+      <div class="panel step reveal"><div class="num">1</div><h3>Скачайте архив</h3><p><code>Clover-2.0.zip</code>, 69 МБ. Внутри программа и всё, что ей нужно.</p></div>
+      <div class="panel step reveal d1"><div class="num">2</div><h3>Распакуйте целиком</h3><p>Правый щелчок → «Извлечь всё». Папки <code>app</code> и <code>runtime</code> должны остаться рядом с Clover.exe.</p></div>
+      <div class="panel step reveal d2"><div class="num">3</div><h3>Запустите Clover.exe</h3><p>Если Windows покажет «Система Windows защитила ваш компьютер» — «Подробнее» → «Выполнить в любом случае»: у программы нет платной подписи.</p></div>
+    </div>
+    <div class="panel get reveal">
+      <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+      <div class="get-text">
+        <b>Clover 2.0 для Windows</b>
+        <span>Торренты, друзья, звонки и серверы — бесплатно.</span>
+        <div class="reqs">
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Windows 10/11, 64 бит</span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg>ZIP, 69 МБ</span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>.NET 8 внутри</span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg>Для друзей — Radmin VPN</span>
+        </div>
+      </div>
+      <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.0/Clover-2.0.zip"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать</a>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="section-head reveal">
+      <h2>Вопросы</h2>
+    </div>
+    <div class="faq">
+      <details class="panel reveal"><summary>Это правда бесплатно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Да. Без рекламы, подписок и регистрации. Своих серверов у Clover нет, поэтому и платить за них некому.</p></details>
+      <details class="panel reveal"><summary>Нужен ли VPN, чтобы общаться с друзьями?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Да, пока нужен Radmin VPN. Установите его, зайдите с друзьями в одну сеть Radmin VPN, затем в Clover нажмите «Скопировать код» и отправьте код другу. Торренты качаются и без VPN.</p></details>
+      <details class="panel reveal"><summary>Это безопасно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Соединения шифруются (ECDH P-256 + AES-256-GCM), друг подтверждается ключом по коду, переписка хранится на диске зашифрованной средствами Windows. Как в любой прямой связи, собеседники видят IP-адреса друг друга.</p></details>
+      <details class="panel reveal"><summary>Чем серверы отличаются от Discord?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Сервер живёт на компьютерах участников. Вступить можно, когда владелец в сети; сообщения доходят до тех, кто в сети, а остальные получают их позже — от любого участника. Пока идёт звонок другу, в голосовой канал не зайти, и наоборот.</p></details>
+      <details class="panel reveal"><summary>Как обновиться до новой версии?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Закройте Clover (значок в трее → «Выход») и распакуйте новую версию. Загрузки, друзья и настройки хранятся отдельно, в <code>%LOCALAPPDATA%\ProstoyTorrent</code>, и никуда не денутся. Друзьям для серверов тоже нужна 2.0.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="row">
+      <a class="brand" href="#top" aria-label="Clover — наверх">
+        <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+        <span class="brand-text"><b>Clover</b></span>
+      </a>
+      <span>Clover 2.0 · BitTorrent</span>
+      <span>Использует MonoTorrent (MIT) и Concentus/Opus (BSD) — лицензии в архиве.</span>
+      <span>Фон нарисован тем же кодом, что заставка приложения.</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+  /* Mascot palettes from the app (Mascots.cs): background, sidebar, surface, surface-alt, hover, border,
+     text, muted, faint, accent, accent-deep, accent-dark; the video is tinted by turning its hue. */
+  (function () {
+    var names = ['bg', 'sidebar', 'surface', 'surface-alt', 'hover', 'border', 'text', 'muted', 'faint', 'accent', 'accent-deep', 'accent-dark'];
+    var palettes = [
+      ['Clover', 'Клевер', 0, '#0D1713 #0A120F #15221B #1C3024 #182920 #22382B #ECF3EC #91A497 #5F7366 #A4ED86 #72C064 #182A16'],
+      ['Rocket', 'Ракета', -78, '#0C0F1E #090B17 #141833 #1D2247 #171B3A #272D57 #EEF0FF #9CA2CC #636996 #FF9A55 #E86B2E #2A1407'],
+      ['Car', 'Машина', -108, '#141012 #0F0C0D #1E181A #2B2024 #231C1E #3A2C30 #F7EFEF #B6A0A4 #7C676B #FF5A6A #D93A4B #2E0A10'],
+      ['Skull', 'Череп', 162, '#110D18 #0D0A13 #1A1425 #251C35 #1F172C #342848 #F2EDFB #AA9CC2 #716589 #BD91FF #9463EA #1E1036'],
+      ['Campfire', 'Костёр', -67, '#140F0B #100C09 #1E1712 #2B2019 #251B15 #3B2C22 #FAF1E8 #BCA793 #806C5B #FFB547 #E5822A #2D1707'],
+      ['Cat', 'Кот', -130, '#150F14 #110C10 #1F161D #2C1F29 #251A22 #3B2A36 #FBF0F6 #C0A3B5 #86697B #FF9FCB #E26BA3 #2E0B1E'],
+      ['Ghost', 'Призрак', 62, '#0C1513 #09100F #13201D #1B2D29 #172622 #26403A #EAF8F4 #95B5AD #5F7C75 #8CF3D8 #4FCBAB #06261F'],
+      ['Planet', 'Планета', 112, '#0B0F1C #080B15 #121829 #1A2240 #161D34 #26315A #ECF1FF #9BA7CD #5F6A92 #7DB5FF #4B85EA #0A1B3A']
+    ];
+    var root = document.documentElement, list = document.getElementById('mascot-list'), meta = document.querySelector('meta[name="theme-color"]');
+    function apply(id, remember) {
+      var p = palettes.filter(function (x) { return x[0] === id; })[0] || palettes[0];
+      var colors = p[3].split(' ');
+      names.forEach(function (name, i) { root.style.setProperty('--' + name, colors[i]); });
+      root.style.setProperty('--video-hue', p[2] + 'deg');
+      if (meta) meta.setAttribute('content', colors[0]);
+      Array.prototype.forEach.call(list.children, function (b) { b.setAttribute('aria-pressed', b.dataset.id === p[0] ? 'true' : 'false'); });
+      if (remember) try { localStorage.setItem('clover-site-mascot', p[0]); } catch (e) { }
+    }
+    palettes.forEach(function (p) {
+      var colors = p[3].split(' ');
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'mascot'; b.dataset.id = p[0]; b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span class="dots" aria-hidden="true"><i style="background:' + colors[9] + '"></i><i style="background:' + colors[10] + '"></i></span>' + p[1];
+      b.addEventListener('click', function () { apply(p[0], true); });
+      list.appendChild(b);
+    });
+    apply(window.__cloverMascot || 'Clover', false);
+  })();
+</script>
+<script>
+  /* Sidebar: the active section slides a highlight like the app's navigation; on phones it opens as a drawer. */
+  (function () {
+    var nav = document.getElementById('nav'), highlight = nav.querySelector('.nav-highlight');
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var root = document.documentElement, menu = document.getElementById('menu-btn');
+    function activate(id) {
+      links.forEach(function (a) {
+        var on = a.dataset.section === id;
+        a.setAttribute('aria-current', on ? 'true' : 'false');
+        if (on) highlight.style.transform = 'translateY(' + a.offsetTop + 'px)';
+      });
+    }
+    activate('top');
+    if ('IntersectionObserver' in window) {
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) activate(e.target.id); });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      links.forEach(function (a) { var s = document.getElementById(a.dataset.section); if (s) spy.observe(s); });
+    }
+    function setMenu(open) {
+      root.classList.toggle('nav-open', open);
+      menu.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menu.setAttribute('aria-label', open ? 'Закрыть меню' : 'Меню');
+    }
+    menu.addEventListener('click', function () { setMenu(!root.classList.contains('nav-open')); });
+    document.getElementById('backdrop').addEventListener('click', function () { setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+    document.getElementById('sidebar').addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  })();
+</script>
+<script>
+  /* Sections rise in as they scroll into view; buttons ripple like the app's. */
+  (function () {
+    var items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(items, function (el) { el.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+    Array.prototype.forEach.call(items, function (el) { io.observe(el); });
+  })();
+  document.addEventListener('pointerdown', function (e) {
+    var b = e.target.closest && e.target.closest('.btn');
+    if (!b || document.documentElement.classList.contains('calm')) return;
+    var r = b.getBoundingClientRect(), size = Math.max(r.width, r.height) * 2.2, dot = document.createElement('span');
+    dot.className = 'ripple';
+    dot.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - r.left - size / 2) + 'px;top:' + (e.clientY - r.top - size / 2) + 'px';
+    b.appendChild(dot);
+    setTimeout(function () { dot.remove(); }, 600);
+  });
+</script>
+<script>
+  /* Background video (the intro loop) and the "Плавные анимации" switch. */
+  (function () {
+    var root = document.documentElement, v = document.getElementById('bg-video'), toggle = document.getElementById('calm-toggle');
+    v.muted = true;
+    function play() {
+      if (root.classList.contains('calm') || !v.paused) return;
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { });
+    }
+    function sync() {
+      var calm = root.classList.contains('calm');
+      toggle.setAttribute('aria-pressed', calm ? 'false' : 'true');
+      if (calm) v.pause(); else play();
+    }
+    toggle.addEventListener('click', function () {
+      root.classList.toggle('calm');
+      try { localStorage.setItem('clover-site-calm', root.classList.contains('calm') ? '1' : '0'); } catch (e) { }
+      if (!root.classList.contains('calm')) Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (el) { el.classList.add('in'); });
+      sync();
+    });
+    sync();
+    v.addEventListener('canplay', play);
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') play(); });
+    var kick = function () {
+      play();
+      ['pointerdown', 'touchstart', 'scroll'].forEach(function (t) { window.removeEventListener(t, kick, { passive: true }); });
+    };
+    ['pointerdown', 'touchstart', 'scroll'].forEach(function (t) { window.addEventListener(t, kick, { passive: true }); });
+  })();
+</script>
+</body>
+</html>
