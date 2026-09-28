@@ -4,6 +4,6 @@
 
 **Сайт:** https://nicekiller28.github.io/clover/
 
-**Скачать:** [последняя версия для Windows 10/11 (ZIP, 69 МБ)](https://github.com/NiceKiller28/clover/releases/latest)
+**Скачать:** [CloverSetup.exe](https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe) — установщик, как у Discord: без прав администратора, с ярлыками на рабочем столе и в «Пуске». Дальше Clover обновляется сам.
 
-Распакуйте архив целиком и запустите `Clover.exe`. Устанавливать .NET не нужно — он внутри архива. Для общения с друзьями пока нужна общая сеть Radmin VPN.
+Портативная версия (ZIP) и список изменений — в [Releases](https://github.com/NiceKiller28/clover/releases/latest). Для общения с друзьями пока нужна общая сеть Radmin VPN.
