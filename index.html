@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clover — торрент-клиент с друзьями, звонками и серверами</title>
-<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с каналами, как в Discord. Без регистрации и рекламы.">
+<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с текстовыми и голосовыми каналами. Без регистрации и рекламы.">
 <meta name="theme-color" content="#0D1713">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Clover — торрент-клиент с друзьями, звонками и серверами">
-<meta property="og:description" content="Бесплатный торрент-клиент для Windows: чат, звонки, показ экрана и серверы с каналами, как в Discord.">
+<meta property="og:description" content="Бесплатный торрент-клиент для Windows: чат, звонки, показ экрана и серверы с текстовыми и голосовыми каналами.">
 <meta property="og:url" content="https://nicekiller28.github.io/clover/">
 <meta property="og:image" content="https://nicekiller28.github.io/clover/clover-poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -400,7 +400,7 @@
     <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
     <span class="brand-text"><b>Clover</b></span>
   </a>
-  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.3.0 beta</span></span></a>
+  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.3.1 beta</span></span></a>
   <button class="btn menu-btn" id="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </header>
 <div class="backdrop" id="backdrop"></div>
@@ -424,12 +424,12 @@
   <div class="side-fill"></div>
   <div class="side-card">
     <b><svg class="i" aria-hidden="true"><use href="#i-exchange"/></svg>Бесплатно навсегда</b>
-    Без регистрации и рекламы. Своя сеть для друзей внутри — Radmin не нужен.
+    Без регистрации и рекламы. Своя сеть для друзей уже внутри.
   </div>
   <a class="btn primary side-download" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
-  <div class="side-meta"><span data-ver>2.3.0 beta</span> · Windows 10/11 · <span data-size>78 МБ</span></div>
+  <div class="side-meta"><span data-ver>2.3.1 beta</span> · Windows 10/11 · <span data-size>78 МБ</span></div>
   <button class="toggle" id="calm-toggle" type="button" aria-pressed="true"><span class="track" aria-hidden="true"></span>Плавные анимации</button>
-  <div class="side-foot">Clover <span data-ver>2.3.0 beta</span> · BitTorrent</div>
+  <div class="side-foot">Clover <span data-ver>2.3.1 beta</span> · BitTorrent</div>
 </aside>
 
 <main class="main">
@@ -452,7 +452,7 @@
         <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать для Windows</a>
         <a class="btn big" href="#features">Возможности<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
-      <div class="meta"><b>Версия <span data-ver>2.3.0 beta</span></b> · Windows 10/11, 64 бит · <span data-size>78 МБ</span> · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.3.0-beta/Clover-2.3.0-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
+      <div class="meta"><b>Версия <span data-ver>2.3.1 beta</span></b> · Windows 10/11, 64 бит · <span data-size>78 МБ</span> · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.3.1-beta/Clover-2.3.1-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
     </div>
     <a class="scroll-cue" href="#app">Листайте вниз<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
   </section>
@@ -478,7 +478,7 @@
       </div>
       <div class="panel metric reveal d2">
         <div class="metric-cap"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span>Звук звонков</div>
-        <div class="metric-value">48 кГц</div><div class="metric-hint">Кодек Opus, как в Discord</div>
+        <div class="metric-value">48 кГц</div><div class="metric-hint">Кодек Opus, полная полоса</div>
         <div class="spark" aria-hidden="true"><svg viewBox="0 0 168 26"><path class="area" d="M0 18 14 9 28 15 42 6 56 17 70 11 84 18 98 9 112 15 126 6 140 17 154 11 168 18V26H0Z"/><path class="line" d="M0 18 14 9 28 15 42 6 56 17 70 11 84 18 98 9 112 15 126 6 140 17 154 11 168 18"/></svg></div>
       </div>
       <div class="panel metric reveal d3">
@@ -492,17 +492,17 @@
   <section class="section" id="features">
     <div class="section-head reveal">
       <h2>Возможности</h2>
-      <p>Торрент-клиент, мессенджер и голосовой чат — без серверов посредников: компьютеры друзей соединяются друг с другом сами, через встроенную сеть Clover. Radmin и настройка роутера не нужны.</p>
+      <p>Торрент-клиент, мессенджер и голосовой чат — без серверов посредников: компьютеры друзей соединяются друг с другом сами, через встроенную сеть Clover. Ни VPN, ни настройка роутера не нужны.</p>
     </div>
     <div class="features">
       <article class="panel feature reveal"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-magnet"/></svg></span><h3>Торренты</h3><p>.torrent и magnet-ссылки, DHT и трекеры. Скачанные части сразу раздаются — пиры охотнее отдают данные вам.</p></article>
       <article class="panel feature reveal d1"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span><h3>Друзья по коду</h3><p>Отправьте другу свой код — и можно переписываться, даже если у обоих «серый» IP. «Печатает…», отметки о доставке, история на диске.</p></article>
-      <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-hash"/></svg></span><h3>Серверы и каналы</h3><p>Текстовые и голосовые каналы, как в Discord. Участникам не обязательно дружить между собой.</p></article>
+      <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-hash"/></svg></span><h3>Серверы и каналы</h3><p>Текстовые и голосовые каналы для вас и друзей. Участникам не обязательно дружить между собой.</p></article>
       <article class="panel feature reveal d3"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><h3>Звонки и экран</h3><p>Звук Opus 48 кГц, шумоподавление, рация (push-to-talk) и показ экрана до 1920×1080.</p></article>
       <article class="panel feature reveal"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg></span><h3>Файлы любого размера</h3><p>Перетащите файл в чат. После обрыва передача продолжится с того же места, а SHA-256 проверит, что всё дошло целым.</p></article>
       <article class="panel feature reveal d1"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-game"/></svg></span><h3>Статусы и игры</h3><p>«В сети», «Не на месте», «Не беспокоить», «Невидимка». Во что вы играете, Clover видит сам — друзья видят «Играет в…».</p></article>
       <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span><h3>Шифрование</h3><p>ECDH P-256 и AES-256-GCM для всего, что идёт между компьютерами. Сообщения на серверах подписаны ключом автора.</p></article>
-      <article class="panel feature reveal d3"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><h3>Работа в фоне</h3><p>Крестик сворачивает в трей, как в Discord: загрузки идут, звонок сам откроет окно. Обновления ставятся сами.</p></article>
+      <article class="panel feature reveal d3"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><h3>Работа в фоне</h3><p>Крестик сворачивает в трей: загрузки идут, звонок сам откроет окно. Обновления ставятся сами.</p></article>
       <article class="panel feature reveal"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-exchange"/></svg></span><h3>Скачать вместе</h3><p>Отправьте торрент другу в чат: вы качаете вместе, и скачанные части идут напрямую друг другу. Папку можно отдать другу как торрент — только ему, с докачкой после обрыва.</p></article>
       <article class="panel feature reveal d1"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-screen"/></svg></span><h3>Стрим в канале</h3><p>Покажите игру всем в голосовом канале сразу: на плитке «В ЭФИРЕ», участники жмут «Смотреть». Плюс оверлей в игре — кто сейчас говорит.</p></article>
       <article class="panel feature reveal d2"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-hash"/></svg></span><h3>Роли и модераторы</h3><p>Цветные роли с правами: модераторы удаляют и закрепляют сообщения и выгоняют нарушителей. Ответы, реакции, закрепы и поиск по каналу.</p></article>
@@ -514,7 +514,7 @@
     <div class="split">
       <div class="reveal">
         <h2>Серверы и голосовые каналы</h2>
-        <p class="lead">Новое в Clover 2.0. Создайте сервер, позовите друзей — и общайтесь, как в Discord, только без чужих серверов посередине.</p>
+        <p class="lead">Новое в Clover 2.0. Создайте сервер, позовите друзей — и общайтесь в текстовых и голосовых каналах без чужих серверов посередине.</p>
         <ul class="checks">
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Текстовые каналы</b> <span>— сообщения с именем и фото автора; кто был не в сети, получит пропущенное.</span></div></li>
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Голос одним щелчком</b> <span>— зашли в канал, и все вас слышат; у говорящего зелёная рамка.</span></div></li>
@@ -522,7 +522,7 @@
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Связь через участников</b> <span>— если двое не соединяются напрямую, голос передаст третий.</span></div></li>
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Владелец управляет</b> <span>— каналы, приглашения и участники в меню сервера.</span></div></li>
         </ul>
-        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.3.0 beta</span></a>
+        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.3.1 beta</span></a>
       </div>
       <div class="shot-wrap reveal d1">
         <img class="shot" src="app-voice.png" width="1360" height="880" loading="lazy" alt="Голосовой канал в Clover: плитки участников, у говорящих зелёная рамка, панель «Голос подключён»">
@@ -544,17 +544,17 @@
   <section class="section" id="install">
     <div class="section-head reveal">
       <h2>Установка за минуту</h2>
-      <p>Как Discord: один установщик, без прав администратора, .NET уже внутри. Дальше Clover обновляется сам.</p>
+      <p>Один установщик, без прав администратора, .NET уже внутри. Дальше Clover обновляется сам.</p>
     </div>
     <div class="steps">
       <div class="panel step reveal"><div class="num">1</div><h3>Скачайте установщик</h3><p><code>CloverSetup.exe</code>, <span data-size>78 МБ</span> — один файл, в нём программа и всё, что ей нужно.</p></div>
       <div class="panel step reveal d1"><div class="num">2</div><h3>Запустите</h3><p>Clover установится сам и появится на рабочем столе и в «Пуске». Если Windows покажет «Система Windows защитила ваш компьютер» — «Подробнее» → «Выполнить в любом случае»: у программы нет платной подписи.</p></div>
-      <div class="panel step reveal d2"><div class="num">3</div><h3>Обновления — сами</h3><p>Clover скачивает новую версию в фоне и ставит её, когда вы выходите из программы, — как Discord. Или сразу, щелчком по карточке «Обновление готово».</p></div>
+      <div class="panel step reveal d2"><div class="num">3</div><h3>Обновления — сами</h3><p>Clover скачивает новую версию в фоне и ставит её, когда вы выходите из программы. Или сразу, щелчком по карточке «Обновление готово».</p></div>
     </div>
     <div class="panel get reveal">
       <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
       <div class="get-text">
-        <b>Clover <span data-ver>2.3.0 beta</span> для Windows</b>
+        <b>Clover <span data-ver>2.3.1 beta</span> для Windows</b>
         <span>Торренты, друзья, звонки и серверы — бесплатно.</span>
         <div class="reqs">
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Windows 10/11, 64 бит</span>
@@ -562,7 +562,7 @@
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>.NET 8 внутри</span>
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg>Сеть для друзей внутри</span>
         </div>
-        <a class="portable" href="https://github.com/NiceKiller28/clover/releases/download/v2.3.0-beta/Clover-2.3.0-beta-portable.zip" data-dl="portable">Нужна портативная версия без установки? Скачать ZIP</a>
+        <a class="portable" href="https://github.com/NiceKiller28/clover/releases/download/v2.3.1-beta/Clover-2.3.1-beta-portable.zip" data-dl="portable">Нужна портативная версия без установки? Скачать ZIP</a>
       </div>
       <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать</a>
     </div>
@@ -575,15 +575,15 @@
     <div class="faq">
       <details class="panel reveal"><summary>Это правда бесплатно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Да. Без рекламы, подписок и регистрации. Своих серверов у Clover нет, поэтому и платить за них некому.</p></details>
-      <details class="panel reveal" id="network"><summary>Нужен ли VPN (Radmin), чтобы общаться с друзьями?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-        <p>С версии 2.2 — нет. В Clover встроена своя виртуальная сеть (на открытом движке ZeroTier), она запускается сама вместе с программой: без установки, драйверов и прав администратора. Когда в карточке профиля появится «Сеть Clover · Radmin не нужен», нажмите «Скопировать код» и отправьте код другу. Если у обоих «серый» IP провайдера, пакеты пойдут через ретрансляторы ZeroTier — медленнее, но работает; всё по-прежнему зашифровано. Обоим нужна версия 2.2 или новее. Radmin VPN тоже продолжает работать, если захотите.</p></details>
+      <details class="panel reveal" id="network"><summary>Нужен ли VPN, чтобы общаться с друзьями?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>С версии 2.2 — нет. В Clover встроена своя виртуальная сеть (на открытом движке ZeroTier), она запускается сама вместе с программой: без установки, драйверов и прав администратора. Когда в карточке профиля появится «Сеть Clover подключена», нажмите «Скопировать код» и отправьте код другу. Если у обоих «серый» IP провайдера, пакеты пойдут через ретрансляторы ZeroTier — медленнее, но работает; всё по-прежнему зашифровано. Обоим нужна версия 2.2 или новее. Общий VPN тоже продолжает работать, если захотите.</p></details>
       <details class="panel reveal" id="together"><summary>Что такое «Скачать вместе» и как отдать другу папку?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>С версии 2.3 торрент можно отправить другу прямо в чат: правый щелчок по загрузке → «Скачать вместе с другом». Друг жмёт «Скачать вместе» — и вы оба качаете из раздачи, а уже скачанные части ещё и передаются напрямую между вами через Clover, даже когда у обоих «серый» IP. Папку можно перетащить в чат: Clover сделает из неё торрент только для этого друга — без DHT и трекеров, в интернете её не найти. Друг скачает её любого размера, с докачкой после обрыва и проверкой каждой части. Обоим нужна версия 2.3.</p></details>
       <details class="panel reveal"><summary>Почему код друга стал короче?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>В 2.3 код выглядит как <code>CLV-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX</code>: в нём начало отпечатка вашего ключа (80 бит) и адрес в сети Clover. Этого хватает, чтобы найти вас и проверить, что ответил именно ваш компьютер: при первом соединении Clover сверяет полный ключ. Старые длинные коды тоже работают.</p></details>
       <details class="panel reveal"><summary>Это безопасно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Соединения шифруются (ECDH P-256 + AES-256-GCM), друг подтверждается ключом по коду, переписка хранится на диске зашифрованной средствами Windows. Как в любой прямой связи, собеседники видят IP-адреса друг друга.</p></details>
-      <details class="panel reveal"><summary>Чем серверы отличаются от Discord?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+      <details class="panel reveal"><summary>Где живут серверы и сообщения?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Сервер живёт на компьютерах участников. Вступить можно, когда владелец в сети; сообщения доходят до тех, кто в сети, а остальные получают их позже — от любого участника. Роли и модераторы (с 2.3) работают так же: права подписаны владельцем, и каждый участник сам проверяет, можно ли модератору удалить сообщение или выгнать участника. Пока идёт звонок другу, в голосовой канал не зайти, и наоборот.</p></details>
       <details class="panel reveal"><summary>Как обновиться до новой версии?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Ничего делать не нужно: установленный Clover сам скачивает обновление в фоне и ставит его при выходе (или сразу — щелчок по карточке «Обновление готово»). Если у вас портативный Clover 2.0 или 2.0.1, просто установите <code>CloverSetup.exe</code>: загрузки, друзья и настройки хранятся отдельно, в <code>%LOCALAPPDATA%\ProstoyTorrent</code>, и подхватятся сами.</p></details>
@@ -598,7 +598,7 @@
         <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
         <span class="brand-text"><b>Clover</b></span>
       </a>
-      <span>Clover <span data-ver>2.3.0 beta</span> · BitTorrent</span>
+      <span>Clover <span data-ver>2.3.1 beta</span> · BitTorrent</span>
       <span>Использует MonoTorrent (MIT), Concentus/Opus (BSD) и Velopack (MIT) — лицензии в программе.</span>
       <span>Фон нарисован тем же кодом, что заставка приложения.</span>
     </div>
