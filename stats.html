@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Статистика Clover</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D1713">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 106'%3E%3Cg transform='rotate(-8)'%3E%3Cpath d='M0 0C2 20 6 36 17 48' stroke='%2386C26E' stroke-width='7.5' stroke-linecap='round' fill='none'/%3E%3Cg fill='%23A4ED86'%3E%3Cg id='l' transform='rotate(45)'%3E%3Ccircle cx='-9' cy='-27' r='14.5'/%3E%3Ccircle cx='9' cy='-27' r='14.5'/%3E%3Cpath d='M0-2-22.5-21.5H22.5Z'/%3E%3C/g%3E%3Cuse href='%23l' transform='rotate(90)'/%3E%3Cuse href='%23l' transform='rotate(180)'/%3E%3Cuse href='%23l' transform='rotate(270)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400..800&display=swap">
+<style>
+  /* The site's palette ("Клевер"): the page is dark like the app. */
+  :root{
+    --bg:#0D1713; --surface:#15221B; --surface-alt:#1C3024; --hover:#182920; --border:#22382B;
+    --text:#ECF3EC; --muted:#91A497; --faint:#7E9185; --accent:#A4ED86; --accent-deep:#72C064; --accent-dark:#182A16;
+    --seed:#69C7A6; --info:#8EC5E8; --warning:#E8C47B; --danger:#F09A94;
+    --radius:16px; color-scheme:dark;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{overflow-x:clip}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:"Noto Sans","Segoe UI",system-ui,-apple-system,sans-serif; font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1040px; margin:0 auto; padding:28px 24px 48px}
+  header{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:26px}
+  .tile{display:grid; place-items:center; width:44px; height:44px; border-radius:13px; background:var(--surface-alt); border:1px solid var(--border)}
+  .tile svg{width:30px; height:30px}
+  h1{margin:0; font-size:clamp(24px, 3vw, 32px); line-height:1.15; font-weight:780; letter-spacing:-.01em}
+  .sub{color:var(--muted); font-size:14px}
+  .grow{flex:1 1 200px}
+  .btn{display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 16px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; font-size:14px; font-weight:600; text-decoration:none; cursor:pointer; white-space:nowrap}
+  .btn:hover{background:var(--hover)}
+  .btn.primary{background:var(--accent); color:var(--accent-dark); border-color:var(--accent)}
+  .btn:focus-visible,.switch:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  h2{margin:34px 0 14px; font-size:20px; font-weight:750}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}
+  .cap{color:var(--muted); font-size:13px; font-weight:600}
+  .value{font-size:30px; font-weight:780; line-height:1.2; margin-top:4px; font-variant-numeric:tabular-nums}
+  .hint{color:var(--muted); font-size:13px; margin-top:2px}
+  .chart{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 18px 12px}
+  .bars{display:grid; grid-template-columns:repeat(10, 1fr); gap:8px; align-items:end; height:180px}
+  .bar{position:relative; display:flex; flex-direction:column; justify-content:flex-end; height:100%}
+  .bar .views{background:color-mix(in srgb, var(--accent) 38%, var(--surface-alt)); border-radius:7px 7px 3px 3px; min-height:3px; position:relative}
+  .bar .people{position:absolute; left:22%; right:22%; bottom:0; background:var(--accent); border-radius:5px 5px 2px 2px; min-height:2px}
+  .bar .num{text-align:center; font-size:12px; color:var(--text); font-weight:650; margin-bottom:4px; font-variant-numeric:tabular-nums}
+  .days{display:grid; grid-template-columns:repeat(10, 1fr); gap:8px; margin-top:8px}
+  .days span{text-align:center; font-size:11.5px; color:var(--muted)}
+  .days span.today{color:var(--accent); font-weight:700}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; color:var(--muted); font-size:13px}
+  .legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius)}
+  table{width:100%; border-collapse:collapse; min-width:520px; font-variant-numeric:tabular-nums}
+  th,td{padding:11px 16px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted); font-size:13px; font-weight:650}
+  tr:last-child td{border-bottom:0}
+  tfoot td{font-weight:750; background:var(--surface-alt)}
+  .me{display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; margin-top:14px}
+  .switch{position:relative; width:46px; height:26px; flex:none; border-radius:13px; border:1px solid var(--border); background:var(--surface-alt); cursor:pointer; padding:0}
+  .switch::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--muted); transition:transform .2s ease, background-color .2s ease}
+  .switch[aria-checked="true"]{background:color-mix(in srgb, var(--accent) 35%, var(--surface-alt))}
+  .switch[aria-checked="true"]::after{transform:translateX(20px); background:var(--accent)}
+  .note{color:var(--muted); font-size:13.5px; margin-top:28px; max-width:760px}
+  .note p{margin:6px 0}
+  .status{color:var(--warning); font-size:13.5px; min-height:20px; margin-top:8px}
+  @media (max-width:560px){
+    .wrap{padding:20px 16px 40px}
+    .bars{gap:4px; height:150px}
+    .days{gap:4px}
+    .bar .num{font-size:10.5px}
+    .days span{font-size:10px}
+    .value{font-size:26px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tile"><svg viewBox="-50 -50 100 106" aria-hidden="true"><g transform="rotate(-8)"><path d="M0 0C2 20 6 36 17 48" stroke="#86C26E" stroke-width="7.5" stroke-linecap="round" fill="none"/><g fill="#A4ED86"><g id="leaf" transform="rotate(45)"><circle cx="-9" cy="-27" r="14.5"/><circle cx="9" cy="-27" r="14.5"/><path d="M0-2-22.5-21.5H22.5Z"/></g><use href="#leaf" transform="rotate(90)"/><use href="#leaf" transform="rotate(180)"/><use href="#leaf" transform="rotate(270)"/></g></g></svg></span>
+    <div class="grow">
+      <h1>Статистика Clover</h1>
+      <div class="sub" id="updated">Загружаем…</div>
+    </div>
+    <button class="btn" id="refresh" type="button">Обновить</button>
+    <a class="btn primary" href="./">На сайт</a>
+  </header>
+
+  <h2>Сайт</h2>
+  <div class="cards">
+    <div class="card"><div class="cap">Сегодня</div><div class="value" id="today">—</div><div class="hint" id="today-hint">посещений</div></div>
+    <div class="card"><div class="cap">Вчера</div><div class="value" id="yesterday">—</div><div class="hint" id="yesterday-hint">посещений</div></div>
+    <div class="card"><div class="cap">За 10 дней</div><div class="value" id="days10">—</div><div class="hint" id="days10-hint">посещений</div></div>
+    <div class="card"><div class="cap">Всего</div><div class="value" id="total">—</div><div class="hint" id="total-hint">посещений</div></div>
+  </div>
+  <div class="chart" style="margin-top:14px">
+    <div class="bars" id="bars" aria-label="Посещения по дням"></div>
+    <div class="days" id="days"></div>
+    <div class="legend"><span><i style="background:color-mix(in srgb, var(--accent) 38%, var(--surface-alt))"></i>посещения (открытия страницы)</span><span><i style="background:var(--accent)"></i>разные посетители</span></div>
+  </div>
+  <div class="status" id="site-status"></div>
+
+  <h2>Скачивания</h2>
+  <div class="cards">
+    <div class="card"><div class="cap">Установщик</div><div class="value" id="setup">—</div><div class="hint">CloverSetup.exe — новые установки</div></div>
+    <div class="card"><div class="cap">Портативная версия</div><div class="value" id="zip">—</div><div class="hint">ZIP без установки</div></div>
+    <div class="card"><div class="cap">Обновления</div><div class="value" id="updates">—</div><div class="hint">установленные Clover скачали новую версию сами</div></div>
+    <div class="card"><div class="cap">Новая версия</div><div class="value" id="latest">—</div><div class="hint" id="latest-hint">скачиваний последней версии</div></div>
+  </div>
+  <div class="table-wrap" style="margin-top:14px">
+    <table>
+      <thead><tr><th>Версия</th><th>Вышла</th><th>Установщик</th><th>ZIP</th><th>Обновления</th><th>Всего</th></tr></thead>
+      <tbody id="releases"><tr><td colspan="6" style="text-align:left;color:var(--muted)">Загружаем…</td></tr></tbody>
+      <tfoot id="releases-total"></tfoot>
+    </table>
+  </div>
+  <div class="status" id="dl-status"></div>
+
+  <div class="me">
+    <button class="switch" id="nocount" type="button" role="switch" aria-checked="false" aria-labelledby="nocount-label"></button>
+    <div class="grow"><b id="nocount-label">Не считать мои заходы</b><div class="sub">Только на этом устройстве и в этом браузере — чтобы ваши собственные посещения не попадали в статистику.</div></div>
+  </div>
+
+  <div class="note">
+    <p>Посещения считаются с 30 сентября 2026 года по московскому времени. «Разные посетители» — один браузер считается один раз в день. Сюда попадают только люди с включённым JavaScript; поисковые роботы и сама эта страница не считаются.</p>
+    <p>Скачивания — точные цифры GitHub. Установщик и ZIP — это новые установки, «Обновления» — сколько раз уже установленные Clover скачали новую версию. Один человек может скачать несколько раз.</p>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var counter = 'https://abacus.jasoncameron.dev/get/nicekiller28-clover/';
+    var days = 10;
+    function $(id) { return document.getElementById(id); }
+    function fmt(n) { return n == null ? '—' : n.toLocaleString('ru-RU'); }
+    function plural(n, one, few, many) {
+      var m10 = n % 10, m100 = n % 100;
+      return m10 === 1 && m100 !== 11 ? one : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? few : many;
+    }
+    function people(n) { return n == null ? '' : fmt(n) + ' ' + plural(n, 'посетитель', 'посетителя', 'посетителей'); }
+    // The same day as the site's counter: Moscow time.
+    function dayKey(offset) { return new Date(Date.now() + 3 * 3600e3 - offset * 86400e3).toISOString().slice(0, 10); }
+
+    // A counter that nobody hit yet does not exist (404): that is zero.
+    function get(key) {
+      return fetch(counter + key, { cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer' }).then(function (r) {
+        if (r.status === 404) return 0;
+        if (!r.ok) throw new Error(r.status === 429 ? 'busy' : 'http ' + r.status);
+        return r.json().then(function (j) { return typeof j.value === 'number' ? j.value : 0; });
+      });
+    }
+
+    function loadSite() {
+      $('site-status').textContent = '';
+      var keys = ['views', 'visitors'];
+      for (var i = days - 1; i >= 0; i--) { keys.push('v-' + dayKey(i)); keys.push('u-' + dayKey(i)); }
+      return Promise.all(keys.map(function (k) { return get(k).catch(function (e) { return e; }); })).then(function (values) {
+        var failed = values.filter(function (v) { return v instanceof Error; });
+        if (failed.length) {
+          $('site-status').textContent = failed.some(function (e) { return e.message === 'busy'; })
+            ? 'Счётчик просит подождать — нажмите «Обновить» через 10 секунд.' : 'Счётчик посещений сейчас недоступен — попробуйте позже.';
+        }
+        function num(v) { return v instanceof Error ? null : v; }
+        var total = num(values[0]), visitors = num(values[1]), series = [];
+        for (var d = 0; d < days; d++) series.push({ key: dayKey(days - 1 - d), views: num(values[2 + d * 2]), people: num(values[3 + d * 2]) });
+        var today = series[days - 1], yesterday = series[days - 2];
+        var sumViews = series.reduce(function (s, x) { return s + (x.views || 0); }, 0), sumPeople = series.reduce(function (s, x) { return s + (x.people || 0); }, 0);
+        $('today').textContent = fmt(today.views); $('today-hint').textContent = 'посещений · ' + people(today.people);
+        $('yesterday').textContent = fmt(yesterday.views); $('yesterday-hint').textContent = 'посещений · ' + people(yesterday.people);
+        $('days10').textContent = fmt(sumViews); $('days10-hint').textContent = 'посещений · ' + people(sumPeople) + ' (по дням)';
+        $('total').textContent = fmt(total); $('total-hint').textContent = 'посещений · ' + (visitors == null ? '' : fmt(visitors) + ' ' + plural(visitors, 'браузер', 'браузера', 'браузеров') + ' всего');
+        var max = Math.max(1, Math.max.apply(null, series.map(function (x) { return x.views || 0; })));
+        var bars = $('bars'), labels = $('days');
+        bars.innerHTML = ''; labels.innerHTML = '';
+        series.forEach(function (x, i) {
+          var bar = document.createElement('div'); bar.className = 'bar';
+          bar.title = x.key.split('-').reverse().join('.') + ': ' + fmt(x.views) + ' посещ., ' + people(x.people);
+          var n = document.createElement('div'); n.className = 'num'; n.textContent = x.views ? fmt(x.views) : '';
+          var views = document.createElement('div'); views.className = 'views'; views.style.height = ((x.views || 0) / max * 88) + '%';
+          var who = document.createElement('div'); who.className = 'people'; who.style.height = x.views ? Math.min(100, (x.people || 0) / x.views * 100) + '%' : '0';
+          views.appendChild(who); bar.appendChild(n); bar.appendChild(views); bars.appendChild(bar);
+          var label = document.createElement('span'); var p = x.key.split('-');
+          label.textContent = i === days - 1 ? 'сегодня' : p[2] + '.' + p[1];
+          if (i === days - 1) label.className = 'today';
+          labels.appendChild(label);
+        });
+      });
+    }
+
+    function kind(name) {
+      return /Setup\.exe$/i.test(name) ? 'setup' : /\.zip$/i.test(name) ? 'zip' : /\.nupkg$/i.test(name) ? 'updates' : null;
+    }
+
+    function loadDownloads() {
+      $('dl-status').textContent = '';
+      return fetch('https://api.github.com/repos/NiceKiller28/clover/releases?per_page=100', { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error('github ' + r.status); return r.json(); })
+        .then(function (releases) {
+          var totals = { setup: 0, zip: 0, updates: 0 }, body = $('releases');
+          body.innerHTML = '';
+          releases.filter(function (r) { return !r.draft; }).forEach(function (r, index) {
+            var row = { setup: 0, zip: 0, updates: 0 };
+            (r.assets || []).forEach(function (a) { var k = kind(a.name); if (k) row[k] += a.download_count || 0; });
+            totals.setup += row.setup; totals.zip += row.zip; totals.updates += row.updates;
+            var tr = document.createElement('tr');
+            var date = r.published_at ? new Date(r.published_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+            [String(r.tag_name || '').replace(/^v/i, '').replace('-', ' '), date, fmt(row.setup), fmt(row.zip), fmt(row.updates), fmt(row.setup + row.zip + row.updates)].forEach(function (text) {
+              var td = document.createElement('td'); td.textContent = text; tr.appendChild(td);
+            });
+            body.appendChild(tr);
+            if (index === 0) {
+              $('latest').textContent = fmt(row.setup + row.zip + row.updates);
+              $('latest-hint').textContent = 'скачиваний ' + String(r.tag_name || '').replace(/^v/i, '').replace('-', ' ') + ' (установки и обновления)';
+            }
+          });
+          $('setup').textContent = fmt(totals.setup); $('zip').textContent = fmt(totals.zip); $('updates').textContent = fmt(totals.updates);
+          var foot = $('releases-total'); foot.innerHTML = '';
+          var tr = document.createElement('tr');
+          ['Всего', '', fmt(totals.setup), fmt(totals.zip), fmt(totals.updates), fmt(totals.setup + totals.zip + totals.updates)].forEach(function (text) {
+            var td = document.createElement('td'); td.textContent = text; tr.appendChild(td);
+          });
+          foot.appendChild(tr);
+        })
+        .catch(function () { $('dl-status').textContent = 'GitHub сейчас не ответил — нажмите «Обновить» чуть позже.'; });
+    }
+
+    function load() {
+      $('updated').textContent = 'Загружаем…';
+      Promise.all([loadSite(), loadDownloads()]).then(function () {
+        $('updated').textContent = 'Обновлено ' + new Date().toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+      });
+    }
+
+    // "Do not count my visits": the site's counter skips this browser.
+    var toggle = $('nocount');
+    function show() { var on = false; try { on = localStorage.getItem('clover-site-nocount') === '1'; } catch (e) { } toggle.setAttribute('aria-checked', on ? 'true' : 'false'); }
+    toggle.addEventListener('click', function () {
+      try {
+        if (localStorage.getItem('clover-site-nocount') === '1') localStorage.removeItem('clover-site-nocount');
+        else localStorage.setItem('clover-site-nocount', '1');
+      } catch (e) { }
+      show();
+    });
+    show();
+    $('refresh').addEventListener('click', load);
+    load();
+  })();
+</script>
+</body>
+</html>
