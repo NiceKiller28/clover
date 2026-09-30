@@ -38,6 +38,8 @@
     --accent-hi: color-mix(in srgb, var(--accent) 88%, white);
     --accent-lo: color-mix(in srgb, var(--accent) 88%, black);
     --accent-stem: color-mix(in srgb, var(--accent) 82%, black);
+    /* Small grey text: the app's "faint" is too dim for it (contrast under 4.5:1), so it leans towards "muted". */
+    --faint-text: color-mix(in srgb, var(--faint) 45%, var(--muted));
     --ease: cubic-bezier(.22,1,.36,1);
     --side: 250px;
     --radius: 16px;
@@ -102,7 +104,7 @@
   .brand-tile .logo{width:30px; height:32px}
   .brand-text b{display:block; font-size:21px; line-height:1.1; font-weight:750; letter-spacing:-.01em}
   .brand-text small{display:block; font-size:12.5px; color:var(--muted)}
-  .nav-label{padding:6px 12px 8px; font-size:11px; font-weight:750; letter-spacing:.06em; color:var(--faint)}
+  .nav-label{padding:6px 12px 8px; font-size:11px; font-weight:750; letter-spacing:.06em; color:var(--faint-text)}
   .nav{position:relative; display:flex; flex-direction:column; gap:4px; margin-bottom:18px}
   .nav a{
     position:relative; z-index:1; display:flex; align-items:center; gap:12px; height:42px; padding:0 12px; border-radius:11px;
@@ -128,13 +130,13 @@
   .side-card b{display:flex; align-items:center; gap:8px; margin-bottom:6px; color:var(--text); font-size:13.5px}
   .side-card b .i{color:var(--accent); width:16px; height:16px}
   .side-download{width:100%}
-  .side-meta{margin:8px 4px 0; text-align:center; font-size:12px; color:var(--faint)}
+  .side-meta{margin:8px 4px 0; text-align:center; font-size:12px; color:var(--faint-text)}
   .toggle{display:flex; align-items:center; gap:12px; margin:16px 4px 6px; background:none; border:0; padding:0; color:var(--muted); font:inherit; font-size:13.5px; cursor:pointer}
   .toggle .track{position:relative; width:38px; height:22px; border-radius:11px; background:var(--accent); transition:background-color .25s ease}
   .toggle .track::after{content:""; position:absolute; top:3px; left:19px; width:16px; height:16px; border-radius:50%; background:var(--accent-dark); transition:left .25s var(--ease)}
   .toggle[aria-pressed="false"] .track{background:var(--surface-alt)}
   .toggle[aria-pressed="false"] .track::after{left:3px; background:var(--muted)}
-  .side-foot{margin:8px 6px 0; font-size:11.5px; color:var(--faint)}
+  .side-foot{margin:8px 6px 0; font-size:11.5px; color:var(--faint-text)}
 
   /* ---------- Mobile top bar ---------- */
   .topbar{
@@ -148,7 +150,7 @@
   .topbar .brand-tile .logo{width:26px; height:28px}
   .topbar .brand-text b{font-size:18px}
   .topbar .btn{height:40px; padding:0 14px; font-size:14px}
-  .menu-btn{width:40px; padding:0}
+  .menu-btn, .topbar .menu-btn{width:40px; padding:0}
   .backdrop{display:none; position:fixed; inset:0; z-index:28; background:rgba(0,0,0,.55); opacity:0; transition:opacity .3s ease}
 
   /* ---------- Main ---------- */
@@ -184,13 +186,13 @@
   .caption{margin:12px 0 0; font-size:14px; letter-spacing:.55em; margin-right:-.55em; color:var(--muted); text-transform:lowercase}
   .tagline{max-width:620px; margin:20px 0 0; font-size:clamp(16px, 1.45vw, 19px); line-height:1.5; color:color-mix(in srgb, var(--text) 82%, var(--muted))}
   .cta{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:28px}
-  .meta{margin-top:16px; font-size:13px; color:var(--faint)}
+  .meta{margin-top:16px; font-size:13px; color:var(--faint-text)}
   .meta b{color:var(--muted); font-weight:600}
   .meta a, .get .portable{color:var(--muted); text-decoration:underline; text-decoration-color:color-mix(in srgb, var(--muted) 45%, transparent); text-underline-offset:3px}
   .meta a:hover, .get .portable:hover{color:var(--text)}
   .get .portable{display:inline-block; margin-top:10px; font-size:13px}
   .scroll-cue{position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:2px;
-    color:var(--faint); font-size:12px; text-decoration:none}
+    color:var(--faint-text); font-size:12px; text-decoration:none}
   .scroll-cue .i{animation:bob 1.8s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)}}
 
@@ -288,7 +290,7 @@
   .faq details[open] summary .i{transform:rotate(180deg)}
   .faq details p{margin:0 0 18px; color:var(--muted); font-size:14.5px}
 
-  footer{border-top:1px solid var(--border); padding:30px clamp(20px, 5vw, 64px) 40px; color:var(--faint); font-size:13px}
+  footer{border-top:1px solid var(--border); padding:30px clamp(20px, 5vw, 64px) 40px; color:var(--faint-text); font-size:13px}
   footer .row{max-width:1240px; margin:0 auto; display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center}
   footer .brand{padding:0}
   footer .brand-tile{width:34px; height:34px; border-radius:10px}
@@ -400,7 +402,7 @@
     <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
     <span class="brand-text"><b>Clover</b></span>
   </a>
-  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.3.1 beta</span></span></a>
+  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.3.2 beta</span></span></a>
   <button class="btn menu-btn" id="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </header>
 <div class="backdrop" id="backdrop"></div>
@@ -427,9 +429,9 @@
     Без регистрации и рекламы. Своя сеть для друзей уже внутри.
   </div>
   <a class="btn primary side-download" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
-  <div class="side-meta"><span data-ver>2.3.1 beta</span> · Windows 10/11 · <span data-size>78 МБ</span></div>
+  <div class="side-meta"><span data-ver>2.3.2 beta</span> · Windows 10/11 · <span data-size>79 МБ</span></div>
   <button class="toggle" id="calm-toggle" type="button" aria-pressed="true"><span class="track" aria-hidden="true"></span>Плавные анимации</button>
-  <div class="side-foot">Clover <span data-ver>2.3.1 beta</span> · BitTorrent</div>
+  <div class="side-foot">Clover <span data-ver>2.3.2 beta</span> · BitTorrent</div>
 </aside>
 
 <main class="main">
@@ -452,7 +454,7 @@
         <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать для Windows</a>
         <a class="btn big" href="#features">Возможности<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
-      <div class="meta"><b>Версия <span data-ver>2.3.1 beta</span></b> · Windows 10/11, 64 бит · <span data-size>78 МБ</span> · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.3.1-beta/Clover-2.3.1-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
+      <div class="meta"><b>Версия <span data-ver>2.3.2 beta</span></b> · Windows 10/11, 64 бит · <span data-size>79 МБ</span> · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.3.2-beta/Clover-2.3.2-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
     </div>
     <a class="scroll-cue" href="#app">Листайте вниз<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
   </section>
@@ -514,7 +516,7 @@
     <div class="split">
       <div class="reveal">
         <h2>Серверы и голосовые каналы</h2>
-        <p class="lead">Новое в Clover 2.0. Создайте сервер, позовите друзей — и общайтесь в текстовых и голосовых каналах без чужих серверов посередине.</p>
+        <p class="lead">Есть с Clover 2.0, а в 2.3 добавились роли, модераторы и стримы. Создайте сервер, позовите друзей — и общайтесь в текстовых и голосовых каналах без чужих серверов посередине.</p>
         <ul class="checks">
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Текстовые каналы</b> <span>— сообщения с именем и фото автора; кто был не в сети, получит пропущенное.</span></div></li>
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Голос одним щелчком</b> <span>— зашли в канал, и все вас слышат; у говорящего зелёная рамка.</span></div></li>
@@ -522,7 +524,7 @@
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Связь через участников</b> <span>— если двое не соединяются напрямую, голос передаст третий.</span></div></li>
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Владелец управляет</b> <span>— каналы, приглашения и участники в меню сервера.</span></div></li>
         </ul>
-        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.3.1 beta</span></a>
+        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.3.2 beta</span></a>
       </div>
       <div class="shot-wrap reveal d1">
         <img class="shot" src="app-voice.png" width="1360" height="880" loading="lazy" alt="Голосовой канал в Clover: плитки участников, у говорящих зелёная рамка, панель «Голос подключён»">
@@ -547,22 +549,22 @@
       <p>Один установщик, без прав администратора, .NET уже внутри. Дальше Clover обновляется сам.</p>
     </div>
     <div class="steps">
-      <div class="panel step reveal"><div class="num">1</div><h3>Скачайте установщик</h3><p><code>CloverSetup.exe</code>, <span data-size>78 МБ</span> — один файл, в нём программа и всё, что ей нужно.</p></div>
+      <div class="panel step reveal"><div class="num">1</div><h3>Скачайте установщик</h3><p><code>CloverSetup.exe</code>, <span data-size>79 МБ</span> — один файл, в нём программа и всё, что ей нужно.</p></div>
       <div class="panel step reveal d1"><div class="num">2</div><h3>Запустите</h3><p>Clover установится сам и появится на рабочем столе и в «Пуске». Если Windows покажет «Система Windows защитила ваш компьютер» — «Подробнее» → «Выполнить в любом случае»: у программы нет платной подписи.</p></div>
       <div class="panel step reveal d2"><div class="num">3</div><h3>Обновления — сами</h3><p>Clover скачивает новую версию в фоне и ставит её, когда вы выходите из программы. Или сразу, щелчком по карточке «Обновление готово».</p></div>
     </div>
     <div class="panel get reveal">
       <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
       <div class="get-text">
-        <b>Clover <span data-ver>2.3.1 beta</span> для Windows</b>
+        <b>Clover <span data-ver>2.3.2 beta</span> для Windows</b>
         <span>Торренты, друзья, звонки и серверы — бесплатно.</span>
         <div class="reqs">
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Windows 10/11, 64 бит</span>
-          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg>Установщик, <span data-size>78 МБ</span></span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg>Установщик, <span data-size>79 МБ</span></span>
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>.NET 8 внутри</span>
           <span class="req"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg>Сеть для друзей внутри</span>
         </div>
-        <a class="portable" href="https://github.com/NiceKiller28/clover/releases/download/v2.3.1-beta/Clover-2.3.1-beta-portable.zip" data-dl="portable">Нужна портативная версия без установки? Скачать ZIP</a>
+        <a class="portable" href="https://github.com/NiceKiller28/clover/releases/download/v2.3.2-beta/Clover-2.3.2-beta-portable.zip" data-dl="portable">Нужна портативная версия без установки? Скачать ZIP</a>
       </div>
       <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать</a>
     </div>
@@ -584,7 +586,7 @@
       <details class="panel reveal"><summary>Это безопасно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Соединения шифруются (ECDH P-256 + AES-256-GCM), друг подтверждается ключом по коду, переписка хранится на диске зашифрованной средствами Windows. Как в любой прямой связи, собеседники видят IP-адреса друг друга.</p></details>
       <details class="panel reveal"><summary>Где живут серверы и сообщения?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-        <p>Сервер живёт на компьютерах участников. Вступить можно, когда владелец в сети; сообщения доходят до тех, кто в сети, а остальные получают их позже — от любого участника. Роли и модераторы (с 2.3) работают так же: права подписаны владельцем, и каждый участник сам проверяет, можно ли модератору удалить сообщение или выгнать участника. Пока идёт звонок другу, в голосовой канал не зайти, и наоборот.</p></details>
+        <p>Сервер живёт на компьютерах участников. Вступить можно, когда владелец в сети; сообщения доходят до тех, кто в сети, а остальные получают их позже — от любого участника. Роли и модераторы (с 2.3) работают так же: права подписаны владельцем, и каждый участник сам проверяет, можно ли модератору удалить сообщение или выгнать участника. Позвонить другу можно, даже когда он сидит в голосовом канале или уже разговаривает с кем-то (с 2.3.2): у него зазвонит, а ответ выведет его из канала или завершит прежний звонок.</p></details>
       <details class="panel reveal"><summary>Как обновиться до новой версии?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Ничего делать не нужно: установленный Clover сам скачивает обновление в фоне и ставит его при выходе (или сразу — щелчок по карточке «Обновление готово»). Если у вас портативный Clover 2.0 или 2.0.1, просто установите <code>CloverSetup.exe</code>: загрузки, друзья и настройки хранятся отдельно, в <code>%LOCALAPPDATA%\ProstoyTorrent</code>, и подхватятся сами.</p></details>
       <details class="panel reveal"><summary>Как удалить Clover?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
@@ -598,8 +600,8 @@
         <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
         <span class="brand-text"><b>Clover</b></span>
       </a>
-      <span>Clover <span data-ver>2.3.1 beta</span> · BitTorrent</span>
-      <span>Использует MonoTorrent (MIT), Concentus/Opus (BSD) и Velopack (MIT) — лицензии в программе.</span>
+      <span>Clover <span data-ver>2.3.2 beta</span> · BitTorrent</span>
+      <span>Использует MonoTorrent (MIT), Concentus/Opus (BSD), ZeroTier libzt (BSL 1.1) и Velopack (MIT) — лицензии в программе.</span>
       <span>Фон нарисован тем же кодом, что заставка приложения.</span>
     </div>
   </footer>
