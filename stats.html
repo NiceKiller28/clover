@@ -108,13 +108,14 @@
   <div class="cards">
     <div class="card"><div class="cap">Установщик</div><div class="value" id="setup">—</div><div class="hint">CloverSetup.exe — новые установки</div></div>
     <div class="card"><div class="cap">Портативная версия</div><div class="value" id="zip">—</div><div class="hint">ZIP без установки</div></div>
+    <div class="card"><div class="cap">Android</div><div class="value" id="android">—</div><div class="hint">Clover-Android.apk — телефоны</div></div>
     <div class="card"><div class="cap">Обновления</div><div class="value" id="updates">—</div><div class="hint">установленные Clover скачали новую версию сами</div></div>
     <div class="card"><div class="cap">Новая версия</div><div class="value" id="latest">—</div><div class="hint" id="latest-hint">скачиваний последней версии</div></div>
   </div>
   <div class="table-wrap" style="margin-top:14px">
     <table>
-      <thead><tr><th>Версия</th><th>Вышла</th><th>Установщик</th><th>ZIP</th><th>Обновления</th><th>Всего</th></tr></thead>
-      <tbody id="releases"><tr><td colspan="6" style="text-align:left;color:var(--muted)">Загружаем…</td></tr></tbody>
+      <thead><tr><th>Версия</th><th>Вышла</th><th>Установщик</th><th>ZIP</th><th>Android</th><th>Обновления</th><th>Всего</th></tr></thead>
+      <tbody id="releases"><tr><td colspan="7" style="text-align:left;color:var(--muted)">Загружаем…</td></tr></tbody>
       <tfoot id="releases-total"></tfoot>
     </table>
   </div>
@@ -127,7 +128,7 @@
 
   <div class="note">
     <p>Посещения считаются с 30 сентября 2026 года по московскому времени. «Разные посетители» — один браузер считается один раз в день. Сюда попадают только люди с включённым JavaScript; поисковые роботы и сама эта страница не считаются.</p>
-    <p>Скачивания — точные цифры GitHub. Установщик и ZIP — это новые установки, «Обновления» — сколько раз уже установленные Clover скачали новую версию. Один человек может скачать несколько раз.</p>
+    <p>Скачивания — точные цифры GitHub. Установщик, ZIP и Android — это новые установки, «Обновления» — сколько раз уже установленные Clover скачали новую версию. Один человек может скачать несколько раз.</p>
   </div>
 </div>
 
@@ -192,7 +193,7 @@
     }
 
     function kind(name) {
-      return /Setup\.exe$/i.test(name) ? 'setup' : /\.zip$/i.test(name) ? 'zip' : /\.nupkg$/i.test(name) ? 'updates' : null;
+      return /Setup\.exe$/i.test(name) ? 'setup' : /\.zip$/i.test(name) ? 'zip' : /\.apk$/i.test(name) ? 'android' : /\.nupkg$/i.test(name) ? 'updates' : null;
     }
 
     function loadDownloads() {
@@ -200,27 +201,27 @@
       return fetch('https://api.github.com/repos/NiceKiller28/clover/releases?per_page=100', { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('github ' + r.status); return r.json(); })
         .then(function (releases) {
-          var totals = { setup: 0, zip: 0, updates: 0 }, body = $('releases');
+          var totals = { setup: 0, zip: 0, android: 0, updates: 0 }, body = $('releases');
           body.innerHTML = '';
           releases.filter(function (r) { return !r.draft; }).forEach(function (r, index) {
-            var row = { setup: 0, zip: 0, updates: 0 };
+            var row = { setup: 0, zip: 0, android: 0, updates: 0 };
             (r.assets || []).forEach(function (a) { var k = kind(a.name); if (k) row[k] += a.download_count || 0; });
-            totals.setup += row.setup; totals.zip += row.zip; totals.updates += row.updates;
+            totals.setup += row.setup; totals.zip += row.zip; totals.android += row.android; totals.updates += row.updates;
             var tr = document.createElement('tr');
             var date = r.published_at ? new Date(r.published_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-            [String(r.tag_name || '').replace(/^v/i, '').replace('-', ' '), date, fmt(row.setup), fmt(row.zip), fmt(row.updates), fmt(row.setup + row.zip + row.updates)].forEach(function (text) {
+            [String(r.tag_name || '').replace(/^v/i, '').replace('-', ' '), date, fmt(row.setup), fmt(row.zip), fmt(row.android), fmt(row.updates), fmt(row.setup + row.zip + row.android + row.updates)].forEach(function (text) {
               var td = document.createElement('td'); td.textContent = text; tr.appendChild(td);
             });
             body.appendChild(tr);
             if (index === 0) {
-              $('latest').textContent = fmt(row.setup + row.zip + row.updates);
+              $('latest').textContent = fmt(row.setup + row.zip + row.android + row.updates);
               $('latest-hint').textContent = 'скачиваний ' + String(r.tag_name || '').replace(/^v/i, '').replace('-', ' ') + ' (установки и обновления)';
             }
           });
-          $('setup').textContent = fmt(totals.setup); $('zip').textContent = fmt(totals.zip); $('updates').textContent = fmt(totals.updates);
+          $('setup').textContent = fmt(totals.setup); $('zip').textContent = fmt(totals.zip); $('android').textContent = fmt(totals.android); $('updates').textContent = fmt(totals.updates);
           var foot = $('releases-total'); foot.innerHTML = '';
           var tr = document.createElement('tr');
-          ['Всего', '', fmt(totals.setup), fmt(totals.zip), fmt(totals.updates), fmt(totals.setup + totals.zip + totals.updates)].forEach(function (text) {
+          ['Всего', '', fmt(totals.setup), fmt(totals.zip), fmt(totals.android), fmt(totals.updates), fmt(totals.setup + totals.zip + totals.android + totals.updates)].forEach(function (text) {
             var td = document.createElement('td'); td.textContent = text; tr.appendChild(td);
           });
           foot.appendChild(tr);
