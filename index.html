@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clover — торрент-клиент с друзьями, звонками и серверами</title>
-<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с текстовыми и голосовыми каналами. Без регистрации и рекламы.">
+<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с текстовыми и голосовыми каналами. Для общения с телефона есть приложение для Android. Без регистрации и рекламы.">
 <meta name="theme-color" content="#0D1713">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Clover — торрент-клиент с друзьями, звонками и серверами">
@@ -318,6 +318,30 @@
   .calm .js .reveal, .calm.js .reveal{opacity:1; transform:none}
   .calm.js .hero-content > *, .calm.js .hero h1 span{opacity:1}
 
+  .get-text .get-how{display:block; margin-top:10px; font-size:13px; color:var(--faint-text)}
+  .get-text b span{font-size:inherit; color:inherit}
+  /* ---------- "Скачать": Windows or Android ---------- */
+  .choose{padding:0; border:1px solid var(--border); border-radius:20px; background:var(--sidebar); color:var(--text); width:min(660px, calc(100vw - 32px)); max-height:calc(100dvh - 32px); overflow:auto; box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .choose::backdrop{background:rgba(4,8,6,.72); backdrop-filter:blur(3px)}
+  .choose-body{position:relative; padding:26px}
+  .choose h2{margin:0 0 4px; font-size:22px; letter-spacing:-.01em}
+  .choose-lead{margin:0 0 18px; color:var(--muted); font-size:14px}
+  .choose-x{position:absolute; top:16px; right:16px; width:38px; height:38px; padding:0; justify-content:center}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .choice{position:relative; display:flex; flex-direction:column; gap:6px; padding:20px; text-decoration:none}
+  .choice:hover{border-color:color-mix(in srgb, var(--border) 40%, var(--accent)); transform:translateY(-2px)}
+  .choice .tile{width:40px; height:40px; border-radius:12px; margin-bottom:4px}
+  .choice .tile .i{width:22px; height:22px}
+  .choice b{font-size:18px}
+  .choice .what{color:var(--muted); font-size:13.5px}
+  .choice .size{color:var(--faint-text); font-size:12.5px; margin-bottom:10px}
+  .choice .size span, .req span{white-space:nowrap}
+  .choice .btn{margin-top:auto; width:100%; justify-content:center; pointer-events:none}
+  .choice.yours{border-color:color-mix(in srgb, var(--border) 30%, var(--accent))}
+  .choice.yours::before{content:"Ваше устройство"; position:absolute; top:16px; right:16px; font-size:11px; font-weight:700; color:var(--accent-dark); background:var(--accent); padding:2px 8px; border-radius:8px}
+  .choose-note{margin:14px 0 0; color:var(--faint-text); font-size:12.5px}
+  @media (max-width:560px){ .choices{grid-template-columns:1fr} .choose-body{padding:22px 18px} }
+
   /* ---------- Responsive ---------- */
   @media (max-width:1100px){
     .metrics{grid-template-columns:repeat(2, 1fr)}
@@ -393,6 +417,7 @@
     <symbol id="i-exchange" viewBox="0 0 24 24"><path d="M7 4v15M3 15l4 4 4-4M17 20V5M13 9l4-4 4 4"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-windows" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16M4 12h16"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
     <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></symbol>
   </defs>
 </svg>
@@ -402,7 +427,7 @@
     <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
     <span class="brand-text"><b>Clover</b></span>
   </a>
-  <a class="btn primary" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.5.0 beta</span></span></a>
+  <a class="btn primary" href="#install" data-choose><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="dl-text">Скачать</span><span class="sr"> Clover <span data-ver>2.5.0 beta</span></span></a>
   <button class="btn menu-btn" id="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </header>
 <div class="backdrop" id="backdrop"></div>
@@ -428,8 +453,8 @@
     <b><svg class="i" aria-hidden="true"><use href="#i-exchange"/></svg>Бесплатно навсегда</b>
     Без регистрации и рекламы. Своя сеть для друзей уже внутри.
   </div>
-  <a class="btn primary side-download" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
-  <div class="side-meta"><span data-ver>2.5.0 beta</span> · Windows 10/11 · <span data-size>79 МБ</span></div>
+  <a class="btn primary side-download" href="#install" data-choose><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
+  <div class="side-meta"><span data-ver>2.5.0 beta</span> · Windows и Android</div>
   <button class="toggle" id="calm-toggle" type="button" aria-pressed="true"><span class="track" aria-hidden="true"></span>Плавные анимации</button>
   <div class="side-foot">Clover <span data-ver>2.5.0 beta</span> · BitTorrent</div>
 </aside>
@@ -451,10 +476,10 @@
       <p class="caption">торрент-клиент</p>
       <p class="tagline">Качайте торренты, переписывайтесь и созванивайтесь с друзьями — в одном окне, без регистрации и рекламы.</p>
       <div class="cta">
-        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать для Windows</a>
-        <a class="btn big" href="#features">Возможности<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn primary big" id="hero-windows" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Скачать для Windows</a>
+        <a class="btn big" id="hero-android" href="https://github.com/NiceKiller28/clover/releases/download/v2.5.0-beta/Clover-Android.apk" data-dl="android"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Для Android</a>
       </div>
-      <div class="meta"><b>Версия <span data-ver>2.5.0 beta</span></b> · Windows 10/11, 64 бит · <span data-size>79 МБ</span> · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.5.0-beta/Clover-2.5.0-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
+      <div class="meta"><b>Версия <span data-ver>2.5.0 beta</span></b> · Windows 10/11, 64 бит · <span data-size>79 МБ</span> · Android 5.0+ — только общение · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.5.0-beta/Clover-2.5.0-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
     </div>
     <a class="scroll-cue" href="#app">Листайте вниз<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
   </section>
@@ -526,7 +551,7 @@
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Категории и приватные каналы</b> <span>— группы каналов, тема вверху, медленный режим и каналы только для нужных ролей.</span></div></li>
           <li><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><b>Владелец управляет</b> <span>— каналы, приглашения, роли, модераторы и баны в меню сервера.</span></div></li>
         </ul>
-        <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.5.0 beta</span></a>
+        <a class="btn primary big" href="#install" data-choose><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать <span data-ver>2.5.0 beta</span></a>
       </div>
       <div class="shot-wrap reveal d1">
         <img class="shot" src="app-voice.png" width="1360" height="880" loading="lazy" alt="Голосовой канал в Clover: плитки участников, у говорящих зелёная рамка, панель «Голос подключён»">
@@ -570,6 +595,20 @@
       </div>
       <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать</a>
     </div>
+    <div class="panel get reveal" id="android">
+      <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+      <div class="get-text">
+        <b>Clover <span data-ver>2.5.0 beta</span> для Android</b>
+        <span>Только общение: друзья, чаты, звонки и серверы с голосовыми каналами. Те же друзья и коды, что на компьютере. Торренты и стримы — в версии для Windows.</span>
+        <div class="reqs">
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Android 5.0 и новее</span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg>Файл APK, <span data-apk-size>53 МБ</span></span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg>Сеть для друзей внутри</span>
+        </div>
+        <span class="get-how">Как поставить: откройте скачанный файл на телефоне → разрешите установку из браузера («Неизвестные источники») → «Установить». Новую версию ставят так же — поверх старой, друзья и переписка сохранятся.</span>
+      </div>
+      <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.5.0-beta/Clover-Android.apk" data-dl="android"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать APK</a>
+    </div>
   </section>
 
   <section class="section" id="faq">
@@ -579,6 +618,8 @@
     <div class="faq">
       <details class="panel reveal"><summary>Это правда бесплатно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Да. Без рекламы, подписок и регистрации. Своих серверов у Clover нет, поэтому и платить за них некому.</p></details>
+      <details class="panel reveal" id="phone"><summary>Есть ли Clover для телефона?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <p>Да, для Android 5.0 и новее — <a href="#android">файл APK в разделе «Установка»</a>. На телефоне только общение: друзья, чаты, картинки, голосовые сообщения, звонки и серверы с текстовыми и голосовыми каналами. Добавляйте друзей по тому же коду, что и на компьютере. Чтобы звонки доходили, когда приложение свёрнуто, оставьте включённым «Оставаться на связи в фоне» в профиле. Торренты, эфиры и файлы — в Clover для Windows.</p></details>
       <details class="panel reveal" id="network"><summary>Нужен ли VPN, чтобы общаться с друзьями?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>С версии 2.2 — нет. В Clover встроена своя виртуальная сеть (на открытом движке ZeroTier), она запускается сама вместе с программой: без установки, драйверов и прав администратора. Когда в карточке профиля появится «Сеть Clover подключена», нажмите «Скопировать код» и отправьте код другу. Если у обоих «серый» IP провайдера, пакеты пойдут через ретрансляторы ZeroTier — медленнее, но работает; всё по-прежнему зашифровано. Обоим нужна версия 2.2 или новее. Общий VPN тоже продолжает работать, если захотите.</p></details>
       <details class="panel reveal" id="together"><summary>Что такое «Скачать вместе» и как отдать другу папку?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
@@ -614,6 +655,31 @@
   </footer>
 </main>
 
+<dialog class="choose" id="choose" aria-labelledby="choose-title">
+  <div class="choose-body">
+    <form method="dialog"><button class="btn choose-x" aria-label="Закрыть">✕</button></form>
+    <h2 id="choose-title">Куда скачать Clover?</h2>
+    <p class="choose-lead">Друзья, коды и серверы общие: можно сидеть с компьютера, а звонить с телефона.</p>
+    <div class="choices">
+      <a class="panel choice" data-platform="windows" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup">
+        <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg></span>
+        <b>Windows</b>
+        <span class="what">Всё сразу: торренты, друзья, чаты, звонки, серверы, стримы и файлы.</span>
+        <span class="size">Windows 10/11, 64 бит · установщик <span data-size>79 МБ</span></span>
+        <span class="btn primary"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>CloverSetup.exe</span>
+      </a>
+      <a class="panel choice" data-platform="android" href="https://github.com/NiceKiller28/clover/releases/download/v2.5.0-beta/Clover-Android.apk" data-dl="android">
+        <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+        <b>Android</b>
+        <span class="what">Только общение: друзья, чаты, звонки и серверы с голосовыми каналами.</span>
+        <span class="size">Android 5.0 и новее · файл APK <span data-apk-size>53 МБ</span></span>
+        <span class="btn primary"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Clover-Android.apk</span>
+      </a>
+    </div>
+    <p class="choose-note">На телефоне откройте скачанный APK и разрешите установку из браузера. Подробнее — в разделе «Установка».</p>
+  </div>
+</dialog>
+
 <script>
   /* The newest release on GitHub: version, size and download links follow it, so a new release needs no site change. */
   (function () {
@@ -627,7 +693,7 @@
         function find(pattern) {
           return (release.assets || []).filter(function (a) { return pattern.test(a.name) && /^https:\/\/github\.com\//.test(a.browser_download_url); })[0];
         }
-        var setup = find(/Setup\.exe$/i), portable = find(/\.zip$/i);
+        var setup = find(/Setup\.exe$/i), portable = find(/\.zip$/i), android = find(/Android\.apk$/i);
         // "2.1.0-beta" is shown as "2.1.0 beta", like in the app.
         document.querySelectorAll('[data-ver]').forEach(function (el) { el.textContent = tag.replace('-', ' '); });
         if (setup) {
@@ -636,8 +702,34 @@
           document.querySelectorAll('a[data-dl="setup"]').forEach(function (a) { a.href = setup.browser_download_url; });
         }
         if (portable) document.querySelectorAll('a[data-dl="portable"]').forEach(function (a) { a.href = portable.browser_download_url; });
+        if (android) {
+          var apkSize = Math.round(android.size / 1048576) + ' МБ';
+          document.querySelectorAll('[data-apk-size]').forEach(function (el) { el.textContent = apkSize; });
+          document.querySelectorAll('a[data-dl="android"]').forEach(function (a) { a.href = android.browser_download_url; });
+        }
       })
       .catch(function () { /* offline or rate-limited: the version written in the page stays */ });
+  })();
+
+  /* "Скачать" asks where to: Windows or Android (the visitor's own device is marked; on a phone Android comes first). */
+  (function () {
+    var dialog = document.getElementById('choose');
+    var android = /Android/i.test(navigator.userAgent || '');
+    var mine = dialog && dialog.querySelector('[data-platform="' + (android ? 'android' : 'windows') + '"]');
+    if (mine) mine.classList.add('yours');
+    if (android) {
+      var win = document.getElementById('hero-windows'), phone = document.getElementById('hero-android');
+      if (win && phone) { win.classList.remove('primary'); phone.classList.add('primary'); phone.textContent = ''; phone.insertAdjacentHTML('beforeend', '<svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Скачать для Android'); win.parentNode.insertBefore(phone, win); }
+      if (mine) mine.parentNode.insertBefore(mine, mine.parentNode.firstChild);
+    }
+    // Without dialogs in the browser the buttons simply lead to the "Установка" section.
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+    document.querySelectorAll('a[data-choose]').forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); document.documentElement.classList.remove('nav-open'); dialog.showModal(); });
+    });
+    // A click on the dark backdrop closes it.
+    dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+    dialog.querySelectorAll('a.choice').forEach(function (a) { a.addEventListener('click', function () { setTimeout(function () { dialog.close(); }, 400); }); });
   })();
 
   /* Visits: only numbers go to a public counter (views per day, and each browser once a day); stats.html shows them.
