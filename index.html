@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clover — торрент-клиент с друзьями, звонками и серверами</title>
-<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с текстовыми и голосовыми каналами. Для общения с телефона есть приложение для Android. Без регистрации и рекламы.">
+<meta name="description" content="Clover — бесплатный торрент-клиент для Windows: чат с друзьями, звонки, показ экрана и серверы с текстовыми и голосовыми каналами. Для общения с телефона есть приложения для Android и iPhone. Без регистрации и рекламы.">
 <meta name="theme-color" content="#0D1713">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Clover — торрент-клиент с друзьями, звонками и серверами">
@@ -273,7 +273,8 @@
   }
   .get .brand-tile{width:58px; height:58px; border-radius:16px}
   .get .brand-tile .logo{width:40px; height:42px}
-  .get-text{margin-right:auto}
+  .get-text{margin-right:auto; min-width:0}
+  .get > .btn{flex:none; white-space:nowrap}
   .get-text b{display:block; font-size:18px}
   .get-text span{color:var(--muted); font-size:14px}
   .reqs{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
@@ -320,14 +321,16 @@
 
   .get-text .get-how{display:block; margin-top:10px; font-size:13px; color:var(--faint-text)}
   .get-text b span{font-size:inherit; color:inherit}
+  .get-steps{margin:12px 0 0; padding-left:20px; color:var(--muted); font-size:13.5px; display:grid; gap:5px}
+  .get-steps code{font-family:"Cascadia Mono",Consolas,monospace; font-size:12.5px; color:var(--accent); background:var(--surface-alt); padding:1px 6px; border-radius:6px}
   /* ---------- "Скачать": Windows or Android ---------- */
-  .choose{padding:0; border:1px solid var(--border); border-radius:20px; background:var(--sidebar); color:var(--text); width:min(660px, calc(100vw - 32px)); max-height:calc(100dvh - 32px); overflow:auto; box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .choose{padding:0; border:1px solid var(--border); border-radius:20px; background:var(--sidebar); color:var(--text); width:min(920px, calc(100vw - 32px)); max-height:calc(100dvh - 32px); overflow:hidden auto; box-shadow:0 30px 80px rgba(0,0,0,.55)}
   .choose::backdrop{background:rgba(4,8,6,.72); backdrop-filter:blur(3px)}
   .choose-body{position:relative; padding:26px}
   .choose h2{margin:0 0 4px; font-size:22px; letter-spacing:-.01em}
   .choose-lead{margin:0 0 18px; color:var(--muted); font-size:14px}
   .choose-x{position:absolute; top:16px; right:16px; width:38px; height:38px; padding:0; justify-content:center}
-  .choices{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .choices{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px}
   .choice{position:relative; display:flex; flex-direction:column; gap:6px; padding:20px; text-decoration:none}
   .choice:hover{border-color:color-mix(in srgb, var(--border) 40%, var(--accent)); transform:translateY(-2px)}
   .choice .tile{width:40px; height:40px; border-radius:12px; margin-bottom:4px}
@@ -340,7 +343,7 @@
   .choice.yours{border-color:color-mix(in srgb, var(--border) 30%, var(--accent))}
   .choice.yours::before{content:"Ваше устройство"; position:absolute; top:16px; right:16px; font-size:11px; font-weight:700; color:var(--accent-dark); background:var(--accent); padding:2px 8px; border-radius:8px}
   .choose-note{margin:14px 0 0; color:var(--faint-text); font-size:12.5px}
-  @media (max-width:560px){ .choices{grid-template-columns:1fr} .choose-body{padding:22px 18px} }
+  @media (max-width:820px){ .choices{grid-template-columns:1fr} .choose-body{padding:22px 18px} }
 
   /* ---------- Responsive ---------- */
   @media (max-width:1100px){
@@ -454,7 +457,7 @@
     Без регистрации и рекламы. Своя сеть для друзей уже внутри.
   </div>
   <a class="btn primary side-download" href="#install" data-choose><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать Clover</a>
-  <div class="side-meta"><span data-ver>2.6.0 beta</span> · Windows и Android</div>
+  <div class="side-meta"><span data-ver>2.6.0 beta</span> · Windows, Android, iPhone</div>
   <button class="toggle" id="calm-toggle" type="button" aria-pressed="true"><span class="track" aria-hidden="true"></span>Плавные анимации</button>
   <div class="side-foot">Clover <span data-ver>2.6.0 beta</span> · BitTorrent</div>
 </aside>
@@ -478,8 +481,9 @@
       <div class="cta">
         <a class="btn primary big" id="hero-windows" href="https://github.com/NiceKiller28/clover/releases/latest/download/CloverSetup.exe" data-dl="setup"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Скачать для Windows</a>
         <a class="btn big" id="hero-android" href="https://github.com/NiceKiller28/clover/releases/download/v2.6.0-beta/Clover-Android.apk" data-dl="android"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Для Android</a>
+        <a class="btn big" id="hero-ios" href="#iphone"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Для iPhone</a>
       </div>
-      <div class="meta"><b>Версия <span data-ver>2.6.0 beta</span></b> · Windows 10/11, 64 бит · <span data-size>79 МБ</span> · Android 5.0+ — только общение · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.6.0-beta/Clover-2.6.0-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
+      <div class="meta"><b>Версия <span data-ver>2.6.0 beta</span></b> · Windows 10/11, 64 бит · <span data-size>79 МБ</span> · Android 5.0+ и iPhone — только общение · бесплатно · <a href="https://github.com/NiceKiller28/clover/releases/download/v2.6.0-beta/Clover-2.6.0-beta-portable.zip" data-dl="portable">портативная версия (ZIP)</a></div>
     </div>
     <a class="scroll-cue" href="#app">Листайте вниз<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
   </section>
@@ -609,6 +613,26 @@
       </div>
       <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.6.0-beta/Clover-Android.apk" data-dl="android"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать APK</a>
     </div>
+    <div class="panel get reveal" id="iphone">
+      <span class="brand-tile"><svg class="logo" aria-hidden="true"><use href="#clover"/></svg></span>
+      <div class="get-text">
+        <b>Clover <span data-ver>2.6.0 beta</span> для iPhone</b>
+        <span>То же, что на Android: друзья, чаты, звонки и серверы с голосовыми каналами. Сообщения и звонки приходят, пока Clover открыт на экране. Это первая версия: она проверена в симуляторе Apple, на настоящих айфонах ещё не испытана.</span>
+        <div class="reqs">
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>iPhone 6s и новее, iOS 15+</span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg>Файл IPA, <span data-ipa-size>20 МБ</span></span>
+          <span class="req"><svg class="i" aria-hidden="true"><use href="#i-windows"/></svg>Ставится через компьютер</span>
+        </div>
+        <ol class="get-steps">
+          <li>Скачайте файл <code>Clover-iOS.ipa</code> на компьютер (Windows или Mac).</li>
+          <li>Поставьте на компьютер бесплатную программу Sideloadly (sideloadly.io). На Windows ей нужны iTunes и iCloud с сайта Apple.</li>
+          <li>Подключите айфон кабелем, перетащите файл в окно Sideloadly, введите свой Apple ID и нажмите Start.</li>
+          <li>На айфоне: «Настройки» → «Основные» → «VPN и управление устройством» → доверьте своему Apple ID. На iOS 16 и новее ещё включите «Режим разработчика» («Настройки» → «Конфиденциальность и безопасность»).</li>
+          <li>С бесплатным Apple ID приложение работает 7 дней — потом повторите шаг 3. Друзья и переписка сохранятся.</li>
+        </ol>
+      </div>
+      <a class="btn primary big" href="https://github.com/NiceKiller28/clover/releases/download/v2.6.0-beta/Clover-iOS.ipa" data-dl="ios"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Скачать IPA</a>
+    </div>
   </section>
 
   <section class="section" id="faq">
@@ -619,7 +643,7 @@
       <details class="panel reveal"><summary>Это правда бесплатно?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>Да. Без рекламы, подписок и регистрации. Своих серверов у Clover нет, поэтому и платить за них некому.</p></details>
       <details class="panel reveal" id="phone"><summary>Есть ли Clover для телефона?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-        <p>Да, для Android 5.0 и новее — <a href="#android">файл APK в разделе «Установка»</a>. На телефоне только общение: друзья, чаты, картинки, голосовые сообщения, звонки и серверы с текстовыми и голосовыми каналами. Добавляйте друзей по тому же коду, что и на компьютере. Чтобы звонки доходили, когда приложение свёрнуто, оставьте включённым «Оставаться на связи в фоне» в профиле. Торренты, эфиры и файлы — в Clover для Windows.</p></details>
+        <p>Да: для Android 5.0 и новее — <a href="#android">файл APK</a>, для iPhone (iOS 15 и новее) — <a href="#iphone">файл IPA, который ставится через компьютер</a>. На телефоне только общение: друзья, чаты, картинки, голосовые сообщения, звонки и серверы с текстовыми и голосовыми каналами. Добавляйте друзей по тому же коду, что и на компьютере. На Android оставьте включённым «Оставаться на связи в фоне» в профиле, чтобы звонки доходили при свёрнутом приложении; на iPhone звонки и сообщения приходят, пока Clover открыт. Торренты, эфиры и файлы — в Clover для Windows.</p></details>
       <details class="panel reveal" id="network"><summary>Нужен ли VPN, чтобы общаться с друзьями?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
         <p>С версии 2.2 — нет. В Clover встроена своя виртуальная сеть (на открытом движке ZeroTier), она запускается сама вместе с программой: без установки, драйверов и прав администратора. Когда в карточке профиля появится «Сеть Clover подключена», нажмите «Скопировать код» и отправьте код другу. Если у обоих «серый» IP провайдера, пакеты пойдут через ретрансляторы ZeroTier — медленнее, но работает; всё по-прежнему зашифровано. Обоим нужна версия 2.2 или новее. Общий VPN тоже продолжает работать, если захотите.</p></details>
       <details class="panel reveal" id="together"><summary>Что такое «Скачать вместе» и как отдать другу папку?<svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
@@ -675,8 +699,15 @@
         <span class="size">Android 5.0 и новее · файл APK <span data-apk-size>53 МБ</span></span>
         <span class="btn primary"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Clover-Android.apk</span>
       </a>
+      <a class="panel choice" data-platform="ios" href="#iphone">
+        <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+        <b>iPhone</b>
+        <span class="what">Только общение, как на Android. Ставится через компьютер со своим Apple ID.</span>
+        <span class="size">iOS 15 и новее · файл IPA <span data-ipa-size>20 МБ</span></span>
+        <span class="btn primary"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Как поставить</span>
+      </a>
     </div>
-    <p class="choose-note">На телефоне откройте скачанный APK и разрешите установку из браузера. Подробнее — в разделе «Установка».</p>
+    <p class="choose-note">Android: откройте скачанный APK на телефоне и разрешите установку из браузера. iPhone: Apple не даёт ставить приложения файлом, поэтому нужен компьютер — шаги в разделе «Установка».</p>
   </div>
 </dialog>
 
@@ -693,7 +724,7 @@
         function find(pattern) {
           return (release.assets || []).filter(function (a) { return pattern.test(a.name) && /^https:\/\/github\.com\//.test(a.browser_download_url); })[0];
         }
-        var setup = find(/Setup\.exe$/i), portable = find(/\.zip$/i), android = find(/Android\.apk$/i);
+        var setup = find(/Setup\.exe$/i), portable = find(/\.zip$/i), android = find(/Android\.apk$/i), ios = find(/iOS\.ipa$/i);
         // "2.1.0-beta" is shown as "2.1.0 beta", like in the app.
         document.querySelectorAll('[data-ver]').forEach(function (el) { el.textContent = tag.replace('-', ' '); });
         if (setup) {
@@ -707,19 +738,30 @@
           document.querySelectorAll('[data-apk-size]').forEach(function (el) { el.textContent = apkSize; });
           document.querySelectorAll('a[data-dl="android"]').forEach(function (a) { a.href = android.browser_download_url; });
         }
+        if (ios) {
+          var ipaSize = Math.round(ios.size / 1048576) + ' МБ';
+          document.querySelectorAll('[data-ipa-size]').forEach(function (el) { el.textContent = ipaSize; });
+          document.querySelectorAll('a[data-dl="ios"]').forEach(function (a) { a.href = ios.browser_download_url; });
+        }
       })
       .catch(function () { /* offline or rate-limited: the version written in the page stays */ });
   })();
 
-  /* "Скачать" asks where to: Windows or Android (the visitor's own device is marked; on a phone Android comes first). */
+  /* "Скачать" asks where to: Windows, Android or iPhone (the visitor's own device is marked and comes first on a phone). */
   (function () {
     var dialog = document.getElementById('choose');
-    var android = /Android/i.test(navigator.userAgent || '');
-    var mine = dialog && dialog.querySelector('[data-platform="' + (android ? 'android' : 'windows') + '"]');
+    var agent = navigator.userAgent || '';
+    var android = /Android/i.test(agent), iphone = !android && /iPhone|iPad|iPod/i.test(agent);
+    var mine = dialog && dialog.querySelector('[data-platform="' + (android ? 'android' : iphone ? 'ios' : 'windows') + '"]');
     if (mine) mine.classList.add('yours');
     if (android) {
       var win = document.getElementById('hero-windows'), phone = document.getElementById('hero-android');
       if (win && phone) { win.classList.remove('primary'); phone.classList.add('primary'); phone.textContent = ''; phone.insertAdjacentHTML('beforeend', '<svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Скачать для Android'); win.parentNode.insertBefore(phone, win); }
+      if (mine) mine.parentNode.insertBefore(mine, mine.parentNode.firstChild);
+    }
+    if (iphone) {
+      var first = document.getElementById('hero-windows'), apple = document.getElementById('hero-ios');
+      if (first && apple) { first.classList.remove('primary'); apple.classList.add('primary'); first.parentNode.insertBefore(apple, first); }
       if (mine) mine.parentNode.insertBefore(mine, mine.parentNode.firstChild);
     }
     // Without dialogs in the browser the buttons simply lead to the "Установка" section.
